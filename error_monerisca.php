@@ -9,28 +9,20 @@
 /* modify it under the terms of the GNU General Public License          */
 /* as published by the Free Software Foundation.                        */
 /************************************************************************/
-
 $_user_location	= 'users';
 define('AT_INCLUDE_PATH', '../../include/');
 require(AT_INCLUDE_PATH.'vitals.inc.php');
 require('include/payments.lib.php');
-
-$amount = floatval($_GET['trnAmount']);
-$id = intval($_GET['ref2']);
-$approved = intval($_GET['trnOrderNumber']);
-$ordernumber = intval($_GET['trnOrderNumber']);
-$trans_id = intval($_GET['trnId']);
-
-if ($_config['ec_contact_email']){
-	$contact_admin_email = $_config['ec_contact_email'];
-} else {
-	$contact_admin_email = $_config['contact_email'];
-}
-
-if($_GET['trnApproved'] == 1 && $_GET['trnId']){
-	approve_payment($ordernumber,$trans_id);
-}
-log_requests($trans_id);
 require (AT_INCLUDE_PATH.'header.inc.php');
+?>
+<h3><?php echo _AT('ec_payment_failed'); ?></h3><br /><br />
+<div class="payerrbox">
+<?php $msg->printErrors('EC_PAYMENT_FAILED') ?>. 
+</div><br /><br />
+<ul>
+<?php print_r($_GET['errorMessage']); ?>
+</ul>
+<?php
+
 require (AT_INCLUDE_PATH.'footer.inc.php');
 ?>

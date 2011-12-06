@@ -47,11 +47,21 @@ while ($row4 = mysql_fetch_assoc($result4)) {
 }
 $balance_course_fee = $this_course_fee - $amount_paid;
 $this_course_fee = $balance_course_fee;
-
-$sql = "INSERT INTO ".TABLE_PREFIX."payments VALUES (NULL, NULL, 0, '', '{$_SESSION['member_id']}', '$course_id', '$balance_course_fee')";
+if($_SESSION['payment_id']){
+$sql = "REPLACE INTO ".TABLE_PREFIX."payments VALUES ('$_SESSION[payment_id]', NULL, 0, '', '{$_SESSION['member_id']}', '$course_id', '$balance_course_fee')";
+} else {
+$sql = "INSERT INTO ".TABLE_PREFIX."payments VALUES ('', NULL, 0, '', '{$_SESSION['member_id']}', '$course_id', '$balance_course_fee')";
+}
+//debug($sql);
 $result = mysql_query($sql, $db);
 
-$payment_id = mysql_insert_id($db);
+if(!isset($_SESSION[payment_id])){
+	$payment_id = mysql_insert_id($db);
+	$_SESSION['payment_id'] = $payment_id;
+} else{
+	$payment_id = $_SESSION['payment_id'];
+}
+//debug($payment_id);
 ?>
 <div class="input-form">
 	<div class="row">
@@ -64,7 +74,7 @@ $payment_id = mysql_insert_id($db);
 			<dd><?php echo $system_courses[$course_id]['title']; ?></dd>
 
 			<dt><?php echo _AT('ec_this_course_fee');?></dt>
-			<dd><?php echo $_config['ec_currency_symbol'].$this_course_fee.' '.$_config['ec_currency'];?></dd>
+			<dd><?php echo $_config['ec_currency_symbol'].number_format($this_course_fee,2).' '.$_config['ec_currency'];?></dd>
 
 			<dt><?php echo _AT('ec_amount_recieved');?></dt>
 			<dd><?php echo $_config['ec_currency_symbol'].$amount_paid;?></dd>
@@ -91,6 +101,8 @@ $payment_id = mysql_insert_id($db);
 	?>
 
 	<div class="row buttons">
+		<?php monerisusa_print_form($payment_id, $balance_course_fee, $course_id); ?>
+		<?php monerisca_print_form($payment_id, $balance_course_fee, $course_id); ?>
 		<?php beanstream_print_form($payment_id, $balance_course_fee, $course_id); ?>
 		<?php paypal_print_form($payment_id, $balance_course_fee, $course_id); ?>
 		<?php mirapay_print_form($payment_id, $balance_course_fee, $course_id); ?>

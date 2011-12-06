@@ -1,23 +1,29 @@
+#############
 # ATutor Ecommerce Module Readme
+#
+# This moldule is intended for use with ATutor 2.0+ 
 
-##This moldule is intended for use with ATutor 1.5.4+, though it should work with
-## older versions except for the admin enrollment functions, which were added in 1.5.4.
+This module allows for payment of course fees, and automated enrollment when payments are recieved. This version of the module supports automated enrollment in one course at a time. 
 
-This module allows for payment of course fees, and automated enrollment when payments are recieved. It can be used with one (and only one at a time) of the following payment gateways.
+It can be used with one (and only one) payment gateway at a time.
 
 Payment Gateways Supported
-It is currently setup to run with the MiraPay credit card processing service:
+*MiraPay
 https://ws1.eigendev.com/mira/
 
-Or
-
-It can be used with your PayPal account
+*PayPal
 https://www.paypal.com/cgi-bin/webscr 
 
-Or
-
-You can connect to a Beamstream server
+*Beamstream 
 https://www.beanstream.com/scripts/process_transaction.asp
+
+*Moneris Canada
+https://www3.moneris.com/mpg 
+
+*Moneris USA
+https://esplus.moneris.com/usmpg/index.php
+
+Additonal credit card processing gateways can be added either developing them youself, and adding them to the module's payment.lib.php file, or by contacting info@atutor.ca for a quote, and having the ATutor team integrate one for you. 
 
 ---------------
 MiraPay Test Account
@@ -44,9 +50,9 @@ PayPal Merchant Account Setup
 See the details for setting up a PayPal account at:
 http://www.paypal.com/cgi-bin/webscr?cmd=_merchant-outside
 
-The ATutor Payments module is written to run with PayPal "Buy Now Buttons" which allows customers to purchase one item at a time, in the case of ATutor, a single course at a time. Note that payees will have to setup their own PayPal customer account before they can make payments through PayPal. Also note that after a payment is made through PayPal, there is a 10 second delay before the payee is redirected back to ATutor, and the payments table updated with the transaction ID from PayPal. If a users decides to go off to some other web site before being redirected back to ATutor, the payments table may not be updated. In such a case the admin, or the instructor of a course if instructors are given payment management privileges, will need to manually update the payments table, and if auto enroll is turned on, also update the enrolment for the course, manually enrolling the person in the course.  This problem is less likely to occur when using MiraPay, which automatically redirectls back to ATutor without any delay during which the users can go off somewhere else on the Internet.
+The ATutor Payments module can be run with PayPal "Buy Now Buttons" which allows customers to purchase one item at a time, in the case of ATutor, a single course at a time. Note that payees will have to setup their own PayPal customer account before they can make payments through PayPal. Also note that after a payment is made through PayPal, there is a 10 second delay before the payee is redirected back to ATutor, and the payments table updated with the transaction ID from PayPal. If a users decides to go off to some other web site before being redirected back to ATutor, the payments table may not be updated. In such a case the admin, or the instructor of a course if instructors are given payment management privileges, will need to manually update the payments table, and if auto enroll is turned on, also update the enrolment for the course, manually enrolling the person in the course.  This problem is less likely to occur when using other payment gateways, which automatically redirect back to ATutor without any delay during which the users can go off somewhere else on the Internet.
 
-Once you have your paypal account setup, enter the URL to the PayPal Credit Card processing in the Payments>Settings screen, followed theVendor ID (leave the password field empty)
+Once you have your paypal account setup, enter the URL to the PayPal Credit Card processing in the Payments>Settings screen, followed by the Vendor ID, which is the email address associated with the vendor account (leave the password field empty)
 
 PayPal Location
 (for production)
@@ -56,14 +62,19 @@ or
 https://www.sandbox.paypal.com/cgi-bin/webscr
 
 See details on setting up a sandbox for testing the modules at:
-https://www.paypal.com/en_US/ebook/PP_Sandbox_UserGuide/wwhelp/wwhimpl/js/html/wwhelp.htm
+https://www.paypalobjects.com/en_US/ebook/PP_Sandbox_UserGuide/toc.html
+https://www.paypalobjects.com/en_US/ebook/PP_Sandbox_UserGuide/testing_website_features.html#1041585
 
 PayPal IPN Setup
-For security purpose Instant Payment Notification (IPN) must be setup with your PayPal merchant account. You will be asked to provide a URL to the IPN notification verification script, included with the EComm module. While logged into your PayPal account, slect the Profile tab, then choose "Instant Payment Notification Preferences". Turn "ON" the service, and provide the URL. The URL should also include the password you entered when setting up the module Settings in ATutor. The URL would look something like this:
+For security purpose Instant Payment Notification (IPN) must be setup with your PayPal merchant account. You will be asked to provide a URL to the IPN notification verification script, included with the EComm module. While logged into your PayPal account, select the Profile tab, then choose "Instant Payment Notification Preferences". Turn "ON" the service, and provide the URL. The URL should also include the password you entered when setting up the module Settings in ATutor. The URL would look something like this:
 
 
 http://www.mysite.com/ATutor/mods/ecomm/response_ipn.php?secret=payment01
 
+
+4941199042995591
+01/2013
+123
 
 --------------------
 Beanstream Setup
@@ -101,7 +112,107 @@ Declined 5100000020002000
 
 For additional information, contact Beanstream for a copy of the Beanstream API documentation.
 
+--------------------
+Moneris Canada Setup (or see USA setup below)
+You will need to setup a Moneris sandbox for Canadian transactions at:
+https://esqa.moneris.com/mpg/
+Further documentation (requires registration)
+http://www.eselectplus.ca/en/downloadable-content
 
+This integration makes use of the Monersis Hosted Pay Page. When requesting a merchant account from Moneris once your setup and testing with the sandbox is done, be sure to mention you'll be using the the Moneris Hosted Pay Page for CAD Transactions.
+
+1. Login to the sandbox site with the demo information listed on the Moneris login screen
+2. Click on ADMIN
+3. Click on "hosted config" 
+4. Scroll down and click the "Generate a Version 3 Configuration"
+5. Record the ps_store_id and the hpp_key that gets generated.
+6. Set the following configuation options
+
+Transaction Type: Purchase
+Response Method: Sent to your server as a POST
+Approve URL: the location of the success_moneris.php file in the ecomm module of ATutor (eg. http://misite.com/ATutor/mod/ecomm/success_moneris.php)
+Decline URL: The location of the failure_moneris.php file in the ecomm module of ATutor (eg. http://misite.com/ATutor/mod/ecomm/error_moneris.php)
+
+7. Click Save Changes
+8. Click Configure Appearance and set colour settings
+9. Below the colour settings, check Desplay items details
+10. Set the Cancel Button URL (e.g. (eg. http://misite.com/ATutor/mod/ecomm/failure_moneris.php)
+11. In the Logos section check Visa and Master Card
+12. Click Save Appearance Settings then Return to main configuration
+13. On the Main Configuration screen click Configure Security
+14. In the Add URL field enter the URL to the Ecomm modules payment screen (e.g. http://misite.com/ATutor/mods/ecomm/payment.php) then Return to Main Configuration
+15. Click Configure Email Receipts and then choose the options for the receipt mailed to a customer after a transation is completed.
+16. Done configuring Moneris
+
+
+17. Login to ATutor as the admin user.
+18. Under the Payments tab, choose Settings and set:
+Payment Gateway: Moneris Canada
+Credit card processing location URL: (Development URL - https://esqa.moneris.com/HPPDP/index.php ) or (Production URL - https://www3.moneris.com/HPPDP/index.php )
+Vendor ID: use the ps_store_id from step 5
+Password: use the hpp_key from step 5.
+set other options to suit your needs
+
+Visa Test Account
+4242424242424242
+Expiry: any future date
+
+Master Card Test Account
+5454545454545454
+Expiry: any future date
+
+NOTE for testing purposes the development site only accepts even dollar amounts up to $11.00. Non-even amounts can be used to test error responses.
+
+--------------------
+Moneris USA Setup
+You will need to setup a Moneris sandbox for US transations at:
+https://esplusqa.moneris.com/usmpg/index.php
+More Documentation
+https://esplusqa.moneris.com/connect/en/documents/index.html
+
+This integration makes use of the Monersis Hosted Pay Page. When requesting a merchant account from Moneris once your setup and testing with the sandbox is done, be sure to mention you'll be using the the Moneris Hosted Pay Page for USD Transactions.
+
+1. Login with the demo information listed on the Moneris login screen
+2. Click on ADMIN
+3. Click on "Hosted Config" 
+4. Click the "Generate a New Configuration"
+5. Copy the hpp_id and the hpp_key that gets generated.
+6. Set the following configuation options
+
+Transaction Type: Purchase
+Payment Method: Credit Card
+Response Method: Sent to your server as a POST
+Response URL: the location of the success_monerisusa.php file in the ecomm module of ATutor (eg. http://misite.com/ATutor/mod/ecomm/success_monerisusa.php)
+NOTE: that the success_monerisusa.php file handle both success and failure condition sent from Moneris USA
+
+7. Click Save Changes
+8. Click Configure Appearance and set colour settings
+9. Below the colour settings, check Desplay items details
+10. In the Logos section check Visa and Master Card
+11. Click Save Appearance Settings then Return to main configuration
+12. On the Main Configuration screen click Configure Security
+13. In the Add URL field enter the URL to the Ecomm modules payment screen (e.g. http://misite.com/ATutor/mods/ecomm/payment.php) then Return to Main Configuration
+14. Click Configure Email Receipts and then choose the options for the receipt mailed to a customer after a transation is completed.
+15. Done configuring Moneris
+
+
+16. Login to ATutor as the admin user.
+17. Under the Payments tab, choose Settings and set:
+Payment Gateway: Moneris USA
+Credit card processing location URL: (Development URL - https://esplusqa.moneris.com/DPHPP/index.php ) or (Production URL - https://esplus.moneris.com/DPHPP/index.php )
+Vendor ID: use the hpp_id from step 5
+Password: use the hpp_key from step 5.
+set other options to suit your needs
+
+Visa Test Account
+4242424242424242
+Expiry: any future date
+
+Master Card Test Account
+5454545454545454
+Expiry: any future date
+
+NOTE for testing purposes the development site only accepts even dollar amounts up to $11.00. Non-even amounts can be used to test error responses.
 
 --------------------
 Installation & Setup
@@ -111,25 +222,25 @@ Installation & Setup
 
 3. After installed, on the main admin modules screen enable the module.
 
-4. Once enabled, go to the admin's Payments tab and enter the Test information listed above into the appropriate fields, along with the currency and curreny symbol, and save those setting.
+4. Once enabled, go to the admin's Payments tab and enter the Test/Sandbox information listed above into the appropriate fields, along with the currency and curreny symbol, and save those setting.
 
-5.Optionally, the admin can enter a mailing address to which cheques can be sent, if that is to be one of the payment method. Leave this field empty to disabled cheques as a method of payment.
+5.Optionally, the admin can enter a mailing address to which cheques can be sent and an an invoice generated, if that is to be one of the payment methods. Leave this field empty to disabled cheques as a method of payment.
 
-6. Optionally, the admin can allow instructors to manage their own payments by selecting the associated checkbox in the payments settings.
+6. Optionally, the admin can allow instructors to manage their own payments by selecting the associated checkbox in the payment	 settings.
 
 7. Optionally, the administrator can receive an email notification when new payments are made by selecting  the associated checkbox in the payments settings
 
 
 How the module works
-Payments are course fees associated with an enrollment in a Private course. When a student attempts to enroll in a private course that has a fee associated with it, an entry will be added to the student's Payments screen, accessed through a tab in MyStart page. If the student clicks on Make Payment, and confirms the information as correct, they are redirectled to the secure payment site, where they enter their visa or master card number (availability of either depending on what the merchant account supports), and submit the payment. Just before being redirected to the secure site the information entered by the student is stored in the ec_shop table in ATutor, and it is updated when the payment service has confirmed the payment. Payments that have been completed will be updated with a confirmation code from the payment gateway. 
+Payments are course fees associated with an enrollment in a Private course. When a student attempts to enroll in a private course that has a fee associated with it, an entry will be added to the student's Payments screen, accessed through a tab in My Start Page. If the student clicks on Make Payment, and confirms the information as correct, they are redirectled to the secure payment site, where they enter their visa or master card number (availability of either depending on what the merchant account supports), and submit the payment. Just before being redirected to the secure site the information entered by the student is stored in the ec_shop table in ATutor, and it is updated when the payment service has confirmed the payment. Payments that have been completed will be updated with a confirmation code from the payment gateway. 
 
-If the course has been set to auto-enroll students, they will immediately be given access to the course. If manual enrollment is set, they will receive a notice of their pending enrolment, which the instructor, or administrator must approve. 
+If the course has been set to auto-enroll students, they will immediately be given access to the course. If manual enrollment is set, they will receive a notice of their pending enrolment, which the instructor, or administrator must approve. This is useful when all students enrolled in a course are granted access at the same time.
 
-Administrators can manage individual course payments and settings by logging into a specific course, then managing the course payment settings as describe below for Instructors.
+Administrators can manage individual course payments and course payment settings as described for instrutors below, through the Course Payment Setting tab.
 
-If instrutors are allowed to manage their payments, set by the administrator in step 6 above, they can access Payments through the Manage screen, where they can set the price for the course, and set whether to auto-enroll students, and whether to send an email to the instructor when a payment  has been received. These settings are saved in the ec_course_fees table.
+If instructors are allowed to manage their own payments, set by the administrator in step 6 above, they can access Payments through the Manage screen, where they can set the price for the course, and set whether to auto-enroll students, and whether to send an email to the instructor when a payment has been received. These settings are saved in the ec_course_fees table.
 
-To make a payment students must first click on Enter Course in the Browse Course listing, then choose to enroll in the course. Then under the Payments Tab, click on Make Payment next to the course that is pending enrollment.
+To make a payment students must first click on Enroll Me in the Browse Course listing. They are then instructed to make their payment to complete the enrolment. Or under the Payments Tab, they can click on Make Payment next to the course that is pending enrollment.
 
 
 

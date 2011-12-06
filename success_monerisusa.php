@@ -15,11 +15,12 @@ define('AT_INCLUDE_PATH', '../../include/');
 require(AT_INCLUDE_PATH.'vitals.inc.php');
 require('include/payments.lib.php');
 
-$amount = floatval($_GET['trnAmount']);
-$id = intval($_GET['ref2']);
-$approved = intval($_GET['trnOrderNumber']);
-$ordernumber = intval($_GET['trnOrderNumber']);
-$trans_id = intval($_GET['trnId']);
+$amount = floatval($_POST['amount']);
+$id = intval($_POST['rvar_course_id']);
+$approved = intval($_POST['auth_code']);
+$ordernumber = intval($_POST['rvar_payment_id']);
+$trans_id = $addslashes($_POST['order_no']);
+$course_id = intval($_POST['rvar_course_id']);
 
 if ($_config['ec_contact_email']){
 	$contact_admin_email = $_config['ec_contact_email'];
@@ -27,10 +28,17 @@ if ($_config['ec_contact_email']){
 	$contact_admin_email = $_config['contact_email'];
 }
 
-if($_GET['trnApproved'] == 1 && $_GET['trnId']){
+if($approved > 1 && $trans_id){
 	approve_payment($ordernumber,$trans_id);
+}else{
+
+	$msg->addError('EC_PAYMENT_FAILED');
 }
 log_requests($trans_id);
+
+unset($_SESSION['payment_id']);
 require (AT_INCLUDE_PATH.'header.inc.php');
+
+
 require (AT_INCLUDE_PATH.'footer.inc.php');
 ?>

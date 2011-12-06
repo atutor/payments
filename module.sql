@@ -73,6 +73,9 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_currency_symbol','Curren
 INSERT INTO `language_text` VALUES ('en', '_module','ec_currency_other','Other Currency ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_gateway','Payment Gateway ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_course_fee','Fee to charge for this course ',NOW(),'');
+INSERT INTO `language_text` VALUES ('en', '_module','ec_select_course','Select Course',NOW(),'');
+INSERT INTO `language_text` VALUES ('en', '_module','ec_payments_courses','Course Payment Settings',NOW(),'');
+ 
 INSERT INTO `language_text` VALUES ('en', '_module','ec_auto_approve','Auto approve enrollment when fee has been paid ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_made','Course Fees Received ',NOW(),'');
 
@@ -137,4 +140,11 @@ INSERT INTO `language_text` VALUES ('en', '_msgs','AT_INFOS_EC_PAYMENTS_TURNED_O
 INSERT INTO `language_text` VALUES ('en', '_msgs','AT_ERROR_EC_INVOICE_NOT_FOUND','Invoice number cannot be found.',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_msgs','AT_ERROR_EC_INVOICE_APPROVED','Invoice number has already been approved.',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_msgs','AT_FEEDBACK_ACTION_PENDING_CC_CONFIRM','Your enrollment is conditional on your credit card payment being approved',NOW(),'');
+INSERT INTO `language_text` VALUES ('en', '_msgs','AT_CONFIRM_DELETE_PAYMENT','Are you sure you want to delete this payment record?',NOW(),'');
+
+INSERT INTO `language_text` VALUES ('en', '_msgs','AT_ERROR_EC_PAYMENTS_NO_COURSE_SELECTED','No course was selected. ',NOW(),'');
+
+
 REPLACE INTO `language_text` VALUES ('en', '_msgs','AT_FEEDBACK_APPROVAL_PENDING','Your enrolment request has been made. To complete your enrolment, open the <a href="mods/ecomm/index.php" style="color:red;">Payments tab</a> above, then click on <a href="mods/ecomm/index.php" style="color:red;">Make Payment</a> next to the listing for the course you enrolled in.',NOW(),'');
+
+

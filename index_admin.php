@@ -120,6 +120,8 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 		<div class="row">
 			<div class="required" title="<?php echo _AT('required_field'); ?>">*</div><label for="uri"><?php echo _AT('ec_gateway'); ?></label><br/>
 			<select name="ec_gateway">
+				<option value="Monerisusa"<?php if($_config['ec_gateway']  == "Monerisusa"){ echo ' selected="selected"';} ?>>Moneris USA</option>
+				<option value="Monerisca"<?php if($_config['ec_gateway']  == "Monerisca"){ echo ' selected="selected"';} ?>>Moneris Canada</option>
 				<option value="BeanStream"<?php if($_config['ec_gateway']  == "BeanStream"){ echo ' selected="selected"';} ?>>BeanStream</option>
 				<option value="PayPal" <?php if($_config['ec_gateway']  == "PayPal"){ echo ' selected="selected"';} ?>>PayPal</option>
 				<option value="MiraPay"<?php if($_config['ec_gateway']  == "MiraPay"){ echo ' selected="selected"';} ?>>MiraPay</option>
