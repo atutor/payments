@@ -25,6 +25,7 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_transaction_id','Transac
 INSERT INTO `language_text` VALUES ('en', '_module','ec_settings','Settings',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payments','Payments',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_approve_manually','Approve Manually',NOW(),'');
+INSERT INTO `language_text` VALUES ('en', '_module','payments','Payments',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ecomm','Payments',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_confirm_info','Review the following information before proceeding. If the information is correct, click the Pay by Credit Card button (or Pay by Cheque if enabled) to move on to the next step.',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_course','Course',NOW(),'');
