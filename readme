@@ -1,5 +1,5 @@
 #############
-# ATutor Ecommerce Module Readme
+# ATutor Payments Module Readme
 #
 # This moldule is intended for use with ATutor 2.0+ 
 
@@ -66,7 +66,7 @@ https://www.paypalobjects.com/en_US/ebook/PP_Sandbox_UserGuide/toc.html
 https://www.paypalobjects.com/en_US/ebook/PP_Sandbox_UserGuide/testing_website_features.html#1041585
 
 PayPal IPN Setup
-For security purpose Instant Payment Notification (IPN) must be setup with your PayPal merchant account. You will be asked to provide a URL to the IPN notification verification script, included with the EComm module. While logged into your PayPal account, select the Profile tab, then choose "Instant Payment Notification Preferences". Turn "ON" the service, and provide the URL. The URL should also include the password you entered when setting up the module Settings in ATutor. The URL would look something like this:
+For security purpose Instant Payment Notification (IPN) must be setup with your PayPal merchant account. You will be asked to provide a URL to the IPN notification verification script, included with the Payments module. While logged into your PayPal account, select the Profile tab, then choose "Instant Payment Notification Preferences". Turn "ON" the service, and provide the URL. The URL should also include the password you entered when setting up the module Settings in ATutor. The URL would look something like this:
 
 
 http://www.mysite.com/ATutor/mods/payments/response_ipn.php?secret=payment01
@@ -140,7 +140,7 @@ Decline URL: The location of the failure_moneris.php file in the payments module
 11. In the Logos section check Visa and Master Card
 12. Click Save Appearance Settings then Return to main configuration
 13. On the Main Configuration screen click Configure Security
-14. In the Add URL field enter the URL to the Ecomm modules payment screen (e.g. http://misite.com/ATutor/mods/payments/payment.php) then Return to Main Configuration
+14. In the Add URL field enter the URL to the payments modules payment screen (e.g. http://misite.com/ATutor/mods/payments/payment.php) then Return to Main Configuration
 15. Click Configure Email Receipts and then choose the options for the receipt mailed to a customer after a transation is completed.
 16. Done configuring Moneris
 
@@ -182,7 +182,7 @@ This integration makes use of the Monersis Hosted Pay Page. When requesting a me
 Transaction Type: Purchase
 Payment Method: Credit Card
 Response Method: Sent to your server as a POST
-Response URL: the location of the success_monerisusa.php file in the ecomm module of ATutor (eg. http://misite.com/ATutor/mod/ecomm/success_monerisusa.php)
+Response URL: the location of the success_monerisusa.php file in the payments module of ATutor (eg. http://misite.com/ATutor/mod/payments/success_monerisusa.php)
 NOTE: that the success_monerisusa.php file handle both success and failure condition sent from Moneris USA
 
 7. Click Save Changes
@@ -191,7 +191,7 @@ NOTE: that the success_monerisusa.php file handle both success and failure condi
 10. In the Logos section check Visa and Master Card
 11. Click Save Appearance Settings then Return to main configuration
 12. On the Main Configuration screen click Configure Security
-13. In the Add URL field enter the URL to the Ecomm modules payment screen (e.g. http://misite.com/ATutor/mods/ecomm/payment.php) then Return to Main Configuration
+13. In the Add URL field enter the URL to the Payments modules payment screen (e.g. http://misite.com/ATutor/mods/payments/payment.php) then Return to Main Configuration
 14. Click Configure Email Receipts and then choose the options for the receipt mailed to a customer after a transation is completed.
 15. Done configuring Moneris
 
@@ -218,11 +218,11 @@ NOTE for testing purposes the development site only accepts even dollar amounts 
 Installation & Setup
 1. Unpack the downloaded module into the ATutor mods directory. This will create an payments/ directory which contains all the module files.
 
-2. As the ATutor administrator, under the Modules tab choose Install Module, and choose the Payments module from the list of available modules. If you do not see the module available, make sure you have unpacked it into to right place ( /ATutor/mods/ecomm/)
+2. As the ATutor administrator, under the Modules tab choose Install Module, and choose the Payments module from the list of available modules. If you do not see the module available, make sure you have unpacked it into to right place ( /ATutor/mods/payments/)
 
 3. After installed, on the main admin modules screen enable the module.
 
-4. Once enabled, go to the admin's Payments tab and enter the Test/Sandbox information listed above into the appropriate fields, along with the currency and curreny symbol, and save those setting.
+4. Once enabled, go to the admin's Payments tab and enter the Test/Sandbox information listed above into the appropriate fields, along with the currency and currency symbol, and save those setting.
 
 5.Optionally, the admin can enter a mailing address to which cheques can be sent and an an invoice generated, if that is to be one of the payment methods. Leave this field empty to disabled cheques as a method of payment.
 
