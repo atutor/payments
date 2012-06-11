@@ -11,12 +11,12 @@ if (isset($_POST['submit_yes'])) {
 	$sql = "DELETE from ".TABLE_PREFIX."payments WHERE payment_id = '$id'";
 	$result= mysql_query($sql, $db);
 	$msg->addFeedback('ACTION_COMPLETED_SUCCESSFULLY');
-	header('Location: '.AT_BASE_HREF.'mods/ecomm/payments_admin.php');
+	header('Location: '.AT_BASE_HREF.'mods/payments/payments_admin.php');
 	exit;
 
 } else if (isset($_POST['submit_no'])) {
 	$msg->addFeedback('CANCELLED');
-	header('Location: '.AT_BASE_HREF.'mods/ecomm/payments_admin.php');
+	header('Location: '.AT_BASE_HREF.'mods/payments/payments_admin.php');
 	exit;
 }
 
