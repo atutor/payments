@@ -69,7 +69,7 @@ PayPal IPN Setup
 For security purpose Instant Payment Notification (IPN) must be setup with your PayPal merchant account. You will be asked to provide a URL to the IPN notification verification script, included with the EComm module. While logged into your PayPal account, select the Profile tab, then choose "Instant Payment Notification Preferences". Turn "ON" the service, and provide the URL. The URL should also include the password you entered when setting up the module Settings in ATutor. The URL would look something like this:
 
 
-http://www.mysite.com/ATutor/mods/ecomm/response_ipn.php?secret=payment01
+http://www.mysite.com/ATutor/mods/payments/response_ipn.php?secret=payment01
 
 
 4941199042995591
@@ -130,17 +130,17 @@ This integration makes use of the Monersis Hosted Pay Page. When requesting a me
 
 Transaction Type: Purchase
 Response Method: Sent to your server as a POST
-Approve URL: the location of the success_moneris.php file in the ecomm module of ATutor (eg. http://misite.com/ATutor/mod/ecomm/success_moneris.php)
-Decline URL: The location of the failure_moneris.php file in the ecomm module of ATutor (eg. http://misite.com/ATutor/mod/ecomm/error_moneris.php)
+Approve URL: the location of the success_moneris.php file in the payments module of ATutor (eg. http://misite.com/ATutor/mod/payments/success_moneris.php)
+Decline URL: The location of the failure_moneris.php file in the payments module of ATutor (eg. http://misite.com/ATutor/mod/payments/error_moneris.php)
 
 7. Click Save Changes
 8. Click Configure Appearance and set colour settings
 9. Below the colour settings, check Desplay items details
-10. Set the Cancel Button URL (e.g. (eg. http://misite.com/ATutor/mod/ecomm/failure_moneris.php)
+10. Set the Cancel Button URL (e.g. (eg. http://misite.com/ATutor/mod/payments/failure_moneris.php)
 11. In the Logos section check Visa and Master Card
 12. Click Save Appearance Settings then Return to main configuration
 13. On the Main Configuration screen click Configure Security
-14. In the Add URL field enter the URL to the Ecomm modules payment screen (e.g. http://misite.com/ATutor/mods/ecomm/payment.php) then Return to Main Configuration
+14. In the Add URL field enter the URL to the Ecomm modules payment screen (e.g. http://misite.com/ATutor/mods/payments/payment.php) then Return to Main Configuration
 15. Click Configure Email Receipts and then choose the options for the receipt mailed to a customer after a transation is completed.
 16. Done configuring Moneris
 
@@ -216,7 +216,7 @@ NOTE for testing purposes the development site only accepts even dollar amounts 
 
 --------------------
 Installation & Setup
-1. Unpack the downloaded module into the ATutor mods directory. This will create an ecomm/ directory which contains all the module files.
+1. Unpack the downloaded module into the ATutor mods directory. This will create an payments/ directory which contains all the module files.
 
 2. As the ATutor administrator, under the Modules tab choose Install Module, and choose the Payments module from the list of available modules. If you do not see the module available, make sure you have unpacked it into to right place ( /ATutor/mods/ecomm/)
 
