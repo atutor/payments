@@ -32,15 +32,15 @@ function paypal_print_form($payment_id, $amount, $course_id) {
 			<input type="hidden" name="item_number" value="<?php echo $payment_id; ?>"/>
 			<input type="hidden" name="amount" value="<?php echo $amount; ?>"/>
 			<input type="hidden" name="page_style" value="Primary"/>
-			<input type="hidden" name="notify_url" value="<?php echo AT_BASE_HREF; ?>mods/ecomm/response_ipn.php"/>
+			<input type="hidden" name="notify_url" value="<?php echo AT_BASE_HREF; ?>mods/payments/response_ipn.php"/>
 			<input type="hidden" name="no_shipping" value="0"/>
-			<input type="hidden" name="return" value="<?php echo AT_BASE_HREF; ?>mods/ecomm/response_paypal_user.php"/>
-			<input type="hidden" name="cancel_return" value="<?php echo AT_BASE_HREF; ?>mods/ecomm/response_paypal_user.php"/>
+			<input type="hidden" name="return" value="<?php echo AT_BASE_HREF; ?>mods/payments/response_paypal_user.php"/>
+			<input type="hidden" name="cancel_return" value="<?php echo AT_BASE_HREF; ?>mods/payments/response_paypal_user.php"/>
 			<input type="hidden" name="no_note" value="1"/>
 			<input type="hidden" name="currency_code" value="<?php echo $_config['ec_currency']; ?>"/>
 			<input type="hidden" name="lc" value="CA"/>
 			<input type="submit" border="0" name="submit" value="<?php echo _AT('ec_paybypaypal'); ?>"/>
-			<img src="<?php echo $_base_path; ?>mods/ecomm/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/ecomm/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
+			<img src="<?php echo $_base_path; ?>mods/payments/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/payments/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
 		</form>
 	
 	<?php
@@ -69,11 +69,11 @@ function mirapay_print_form($payment_id, $amount, $course_id) {
 			<input type="hidden" name="Merchant_ID" value="<?php echo $_config['ec_vendor_id']; ?>"/>
 			<input type="hidden" name="MKEY"        value="<?php echo $mkey; ?>"/>
 			<input type="hidden" name="Amount1"     value="<?php echo $amount; ?>"/>
-			<input type="hidden" name="SuccessURL"  value="<?php echo AT_BASE_HREF; ?>mods/ecomm/response_user.php"/>
-			<input type="hidden" name="FailURL"     value="<?php echo AT_BASE_HREF; ?>mods/ecomm/response_user.php"/>
+			<input type="hidden" name="SuccessURL"  value="<?php echo AT_BASE_HREF; ?>mods/payments/response_user.php"/>
+			<input type="hidden" name="FailURL"     value="<?php echo AT_BASE_HREF; ?>mods/payments/response_user.php"/>
 			<input type="hidden" name="Currency"    value="<?php echo $_config['ec_currency'];  ?>"/>
 			<input type="submit" name="confirm" class="button" value="<?php echo _AT('ec_paybycredit'); ?>"/> 
-			<img src="<?php echo $_base_path; ?>mods/ecomm/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/ecomm/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
+			<img src="<?php echo $_base_path; ?>mods/payments/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/payments/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
 		</form>
 	<?php
 	}
@@ -536,11 +536,11 @@ function beanstream_print_form($payment_id, $amount, $course_id) {
 	<input type="hidden"  name="MKEY" value="<?php echo $mkey; ?>">
 	<input type="hidden"  name="trnAmount" value="<?php echo $amount; ?>">
 	
-	<input type="hidden" name="approvedPage"  value="<?php echo AT_BASE_HREF; ?>mods/ecomm/success_beanstream.php"/>
-	<input type="hidden" name="declinedPage"     value="<?php echo AT_BASE_HREF; ?>mods/ecomm/failure_beanstream.php"/>
+	<input type="hidden" name="approvedPage"  value="<?php echo AT_BASE_HREF; ?>mods/payments/success_beanstream.php"/>
+	<input type="hidden" name="declinedPage"     value="<?php echo AT_BASE_HREF; ?>mods/payments/failure_beanstream.php"/>
 
 	
-	<input type="hidden"  name="errorPage" value="<?php echo AT_BASE_HREF; ?>mods/ecomm/error_beanstream.php">
+	<input type="hidden"  name="errorPage" value="<?php echo AT_BASE_HREF; ?>mods/payments/error_beanstream.php">
 	<input type="hidden"  name="ordEmailAddress" value="<?php echo $email; ?>">
 	<?php
 	if($more_info != ''){
@@ -583,7 +583,7 @@ function beanstream_print_form($payment_id, $amount, $course_id) {
 
 			
 			<input type="submit" name="confirm" class="button" value="<?php echo _AT('ec_paybycredit'); ?>"/> 
-			<img src="<?php echo $_base_path; ?>mods/ecomm/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/ecomm/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
+			<img src="<?php echo $_base_path; ?>mods/payments/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/payments/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
 		</form>
 		  
 	</div><br style="clear:both;"/>
@@ -1032,7 +1032,7 @@ function monerisca_print_form($payment_id, $amount, $course_id) {
 	}
 	?>
 			<input type="submit" name="confirm" class="button" value="<?php echo _AT('ec_paybycredit'); ?>"/> 
-			<img src="<?php echo $_base_path; ?>mods/ecomm/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/ecomm/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
+			<img src="<?php echo $_base_path; ?>mods/payments/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/payments/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
 		</form>
 		  
 	</div><br style="clear:both;"/>
@@ -1483,7 +1483,7 @@ function monerisusa_print_form($payment_id, $amount, $course_id) {
 	}
 	?>
 			<input type="submit" name="confirm" class="button" value="<?php echo _AT('ec_paybycredit'); ?>"/> 
-			<img src="<?php echo $_base_path; ?>mods/ecomm/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/ecomm/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
+			<img src="<?php echo $_base_path; ?>mods/payments/images/visa_42x27.gif" title="<?php echo _AT('ec_acceptvisa'); ?>" alt="<?php echo _AT('ec_acceptvisa'); ?>" align="middle" /> <img src="<?php echo $_base_path; ?>mods/payments/images/mc_42x27.gif" title="<?php echo _AT('ec_acceptmastercard'); ?>" alt="<?php echo _AT('ec_acceptmastercard'); ?>" align="middle" />
 		</form>
 		  
 	</div><br style="clear:both;"/>
@@ -1584,7 +1584,7 @@ function check_payment_print_form($payment_id, $amount, $course_id){
 		<form  method="GET">
 			<input type="hidden"  name="Amount1" value="<?php echo $amount; ?>">
 			<input type="hidden"  name="payment_id" value="<?php echo $payment_id; ?>">
-			<input class="button" type="submit" name="bycheque" value="<?php echo _AT('ec_paybycheque'); ?>" onclick="window.open('mods/ecomm/invoice.php?payment_id=<?php echo $payment_id.SEP; ?>course_title=<?php echo $system_courses[$course_id]['title'].SEP; ?>amount=<?php echo $amount; ?>','invwindow','height=425px, width=520px'); return false" /> 
+			<input class="button" type="submit" name="bycheque" value="<?php echo _AT('ec_paybycheque'); ?>" onclick="window.open('mods/payments/invoice.php?payment_id=<?php echo $payment_id.SEP; ?>course_title=<?php echo $system_courses[$course_id]['title'].SEP; ?>amount=<?php echo $amount; ?>','invwindow','height=425px, width=520px'); return false" /> 
 		</form><br/><br />
 	<?php 
 }

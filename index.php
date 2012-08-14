@@ -73,7 +73,7 @@ if (mysql_num_rows($result)) { ?>
 			if ($amount_paid >= $this_course_fee){
 				echo '<td align="center">'._AT('ec_full_payment_recieved').'</td>';
 			}else{
-				echo '<td align="center"><a href="mods/ecomm/payment.php?course_id='.$row['course_id'].'">'._AT('ec_make_payment').'</a></td>';
+				echo '<td align="center"><a href="mods/payments/payment.php?course_id='.$row['course_id'].'">'._AT('ec_make_payment').'</a></td>';
 			}
 		}	
 		echo '</table>';
