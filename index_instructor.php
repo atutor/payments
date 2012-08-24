@@ -7,12 +7,14 @@ if($_SESSION['is_admin'] && $_SESSION['course_id'] >= '1'){
 }else{
 	admin_authenticate(AT_ADMIN_PRIV_ECOMM);
 }
+
 if (!$_config['ec_allow_instructors']){
 	require (AT_INCLUDE_PATH.'header.inc.php');
 	$msg->printInfos('EC_PAYMENTS_TURNED_OFF');
 	require (AT_INCLUDE_PATH.'footer.inc.php'); 
 	exit;
 }
+
 if (isset($_POST['select_course'])) {
  	$_GET['course_id'] = $_POST['ec_course_id'];
  	$course_id = $_POST['ec_course_id'];
@@ -74,10 +76,11 @@ if ($row = mysql_fetch_assoc($result)){
 require (AT_INCLUDE_PATH.'header.inc.php');
 ?>
 	<div class="input-form">
-<?php if(admin_authenticate(AT_ADMIN_PRIV_ECOMM, TRUE) ||admin_authenticate(AT_ADMIN_PRIV_ADMIN, TRUE)){ ?>
 
-
+</form>
 <form action="<?php  $_SERVER['PHP_SELF']; ?>" method="post">
+
+<?php if(admin_authenticate(AT_ADMIN_PRIV_ECOMM, TRUE) ||admin_authenticate(AT_ADMIN_PRIV_ADMIN, TRUE)){ ?>
 
 		<div class="row">
 			<label for="ec_course_id"><?php echo _AT('ec_select_course'); ?></label><br/>
@@ -98,10 +101,10 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 			<input type="submit" name="select_course" value="<?php echo _AT('ec_select_course'); ?>"  class="button"/>
 		</div>
 
-<?php } ?>
-</form>
-<form action="<?php  $_SERVER['PHP_SELF']; ?>" method="post">
-<input type="hidden" name="ec_course_id" value="<?php echo $course_id; ?>" />
+	<?php } else {  ?>
+	
+		<input type="hidden" name="ec_course_id" value="<?php echo $course_id; ?>" />
+	<?php } ?>
 		<div class="row">
 			<label for="ec_course_fee"><?php echo _AT('ec_course_fee'); ?></label><br/>
 			<?php echo $_config['ec_currency_symbol'] ?><input type="text" name="ec_course_fee" size="3" value="<?php echo $this_course_fee; ?>" id="ec_course_fee" size="10"  /> (<?php echo  $_config['ec_currency'] ?>)
