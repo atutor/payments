@@ -146,6 +146,6 @@ INSERT INTO `language_text` VALUES ('en', '_msgs','AT_CONFIRM_DELETE_PAYMENT','A
 INSERT INTO `language_text` VALUES ('en', '_msgs','AT_ERROR_EC_PAYMENTS_NO_COURSE_SELECTED','No course was selected. ',NOW(),'');
 
 
-REPLACE INTO `language_text` VALUES ('en', '_msgs','AT_FEEDBACK_APPROVAL_PENDING','Your enrolment request has been made. To complete your enrolment, open the <a href="mods/ecomm/index.php" style="color:red;">Payments tab</a> above, then click on <a href="mods/ecomm/index.php" style="color:red;">Make Payment</a> next to the listing for the course you enrolled in.',NOW(),'');
+REPLACE INTO `language_text` VALUES ('en', '_msgs','AT_FEEDBACK_APPROVAL_PENDING','Your enrolment request has been made. To complete your enrolment, open the <a href="mods/payments/index.php" style="color:red;">Payments tab</a> above, then click on <a href="mods/payments/index.php" style="color:red;">Make Payment</a> next to the listing for the course you enrolled in.',NOW(),'');
 
 
