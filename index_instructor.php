@@ -6,14 +6,21 @@ if($_SESSION['is_admin'] && $_SESSION['course_id'] >= '1'){
 	authenticate(AT_PRIV_ECOMM);
 }else{
 	admin_authenticate(AT_ADMIN_PRIV_ECOMM);
+	if(!isset($_config['ec_uri'])){
+		$msg->addFeedback('EC_PAYMENTS_CONFIG_NEEDED');
+		header('Location: index_admin.php');
+		exit;
+	}
 }
-
-if (!$_config['ec_allow_instructors']){
+echo "something";
+if ($_SESSION['course_id'] >= '1' && !$_config['ec_allow_instructors']){
 	require (AT_INCLUDE_PATH.'header.inc.php');
 	$msg->printInfos('EC_PAYMENTS_TURNED_OFF');
 	require (AT_INCLUDE_PATH.'footer.inc.php'); 
 	exit;
 }
+
+
 
 if (isset($_POST['select_course'])) {
  	$_GET['course_id'] = $_POST['ec_course_id'];

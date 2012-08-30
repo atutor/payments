@@ -3,7 +3,11 @@ define('AT_INCLUDE_PATH', '../../include/');
 require (AT_INCLUDE_PATH.'vitals.inc.php');
 admin_authenticate(AT_ADMIN_PRIV_ECOMM);
 
-
+if(!isset($_config['ec_uri'])){
+	$msg->addFeedback('EC_PAYMENTS_CONFIG_NEEDED');
+	header('Location: index_admin.php');
+	exit;
+}
 ///////
 // Delete a payment record after confirmation
 if (isset($_POST['submit_yes'])) {
