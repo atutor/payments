@@ -12,7 +12,7 @@ if($_SESSION['is_admin'] && $_SESSION['course_id'] >= '1'){
 		exit;
 	}
 }
-echo "something";
+
 if ($_SESSION['course_id'] >= '1' && !$_config['ec_allow_instructors']){
 	require (AT_INCLUDE_PATH.'header.inc.php');
 	$msg->printInfos('EC_PAYMENTS_TURNED_OFF');
