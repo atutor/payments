@@ -2,9 +2,9 @@
 /************************************************************************/
 /* ATutor																*/
 /************************************************************************/
-/* Copyright (c) 2002-2010                                              */
-/* Inclusive Design Institute                                           */
-/* http://atutor.ca                                                     */
+/* Copyright (c) 2002 - 2013                                            */
+/* ATutorSpaces                                                         */
+/* https://atutorspaces.com                                             */
 /* This program is free software. You can redistribute it and/or        */
 /* modify it under the terms of the GNU General Public License          */
 /* as published by the Free Software Foundation.                        */
@@ -20,39 +20,52 @@ if ($_POST['cancel']) {
 	exit;
 }
 
-///Get the fee for the current course
-$course_id = intval($_GET['course_id']);
 
-$sql = "SELECT course_fee FROM ".TABLE_PREFIX."ec_course_fees WHERE course_id=$course_id";
-$result = mysql_query($sql, $db);
-if ($this_course_fee = mysql_fetch_assoc($result)) {
-	$this_course_fee = $this_course_fee['course_fee'];
-} else {
-	header('location: index.php');
-	exit;
-}
 $course_id = intval($_REQUEST['course_id']);
 $member_id = intval($_SESSION['member_id']);
+if(isset($_POST['seats_requested'])){
+	$seats_requested = intval($_POST['seats_requested']);
+}
+
+// check if this is a seats purchase
+if(!isset($seats_requested)){
+	$sql = "SELECT course_fee FROM ".TABLE_PREFIX."ec_course_fees WHERE course_id=$course_id";
+	$result = mysql_query($sql, $db);
+	if ($this_course_fee = mysql_fetch_assoc($result)) {
+		$this_course_fee = $this_course_fee['course_fee'];
+	} else {
+		header('location: index.php');
+		exit;
+	}
+	
+	///Check if a partial payment has already been made so the balance can be calculated
+	$sql4 = "SELECT SUM(amount) AS total_amount FROM ".TABLE_PREFIX."payments WHERE course_id='$course_id' AND approved=1 AND member_id=$member_id";
+	$result4 = mysql_query($sql4, $db);
+	while ($row4 = mysql_fetch_assoc($result4)) {
+		if($row4['total_amount'] > 0){
+			$amount_paid = $row4['total_amount'];
+		} else {
+			$amount_paid = 0.00;
+		}
+	}
+	$balance_course_fee = $this_course_fee - $amount_paid;
+	$this_course_fee = $balance_course_fee;
+} else if(isset($seats_requested)){
+
+	$balance_course_fee = number_format(($_config['seat_price']*$seats_requested), 2);
+	$this_course_fee = $balance_course_fee;
+}
+
 require (AT_INCLUDE_PATH.'header.inc.php');
 
-///Check if a partial payment has already been made so the balance can be calculated
-$sql4 = "SELECT SUM(amount) AS total_amount FROM ".TABLE_PREFIX."payments WHERE course_id='$course_id' AND approved=1 AND member_id=$member_id";
-$result4 = mysql_query($sql4, $db);
-while ($row4 = mysql_fetch_assoc($result4)) {
-	if($row4['total_amount'] > 0){
-		$amount_paid = $row4['total_amount'];
-	} else {
-		$amount_paid = 0.00;
-	}
-}
-$balance_course_fee = $this_course_fee - $amount_paid;
-$this_course_fee = $balance_course_fee;
+
+
 if($_SESSION['payment_id']){
 $sql = "REPLACE INTO ".TABLE_PREFIX."payments VALUES ('$_SESSION[payment_id]', NULL, 0, '', '{$_SESSION['member_id']}', '$course_id', '$balance_course_fee')";
 } else {
 $sql = "INSERT INTO ".TABLE_PREFIX."payments VALUES ('', NULL, 0, '', '{$_SESSION['member_id']}', '$course_id', '$balance_course_fee')";
 }
-//debug($sql);
+
 $result = mysql_query($sql, $db);
 
 if(!isset($_SESSION[payment_id])){
@@ -61,6 +74,9 @@ if(!isset($_SESSION[payment_id])){
 } else{
 	$payment_id = $_SESSION['payment_id'];
 }
+if(isset($seats_requested)){
+	$_SESSION['seats_requested'] = $seats_requested;
+}
 //debug($payment_id);
 ?>
 <div class="input-form">
@@ -68,10 +84,19 @@ if(!isset($_SESSION[payment_id])){
 		<h3><?php echo _AT('confirm'); ?></h3>
 
 		<p><?php echo _AT('ec_confirm_info'); ?></p>
-
 		<dl>
 			<dt><?php echo _AT('ec_course');?></dt>
 			<dd><?php echo $system_courses[$course_id]['title']; ?></dd>
+		
+<?php 	//course seats purchase	
+		if(isset($seats_requested)){ ?>
+			<dt><?php echo _AT('ec_course_seats');?></dt>
+			<dd><?php echo $seats_requested; ?></dd>
+			<dt><?php echo _AT('ec_course_seats_price');?></dt>
+			<dd><?php echo $_config['ec_currency_symbol'].number_format($_config['seat_price'],2); ?></dd>
+			<dt><?php echo _AT('ec_balance_due');?></dt>
+			<dd><?php echo $_config['ec_currency_symbol'].number_format(($_config['seat_price']*$seats_requested), 2).' '.$_config['ec_currency'];?></dd>
+<?php }else{ // course enrollment fees purchase ?>
 
 			<dt><?php echo _AT('ec_this_course_fee');?></dt>
 			<dd><?php echo $_config['ec_currency_symbol'].number_format($this_course_fee,2).' '.$_config['ec_currency'];?></dd>
@@ -80,9 +105,10 @@ if(!isset($_SESSION[payment_id])){
 			<dd><?php echo $_config['ec_currency_symbol'].$amount_paid;?></dd>
 
 			<dt><?php echo _AT('ec_balance_due');?></dt>
-			<dd><?php echo $_config['ec_currency_symbol'].number_format($balance_course_fee, 2).' '.$_config['ec_currency'];;?></dd>
-		</dl>
-			
+			<dd><?php echo $_config['ec_currency_symbol'].number_format($balance_course_fee, 2).' '.$_config['ec_currency'];?></dd>
+
+<?php } ?>		
+		</dl>	
 		<h4><?php echo _AT('ec_requirements'); ?></h4>
 		<ul>
 			<li><?php echo _AT('ec_requirements_ssl'); ?></li>

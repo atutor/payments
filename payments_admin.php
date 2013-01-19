@@ -1,4 +1,15 @@
 <?php
+/************************************************************************/
+/* ATutor																*/
+/************************************************************************/
+/* Copyright (c) 2002 - 2013                                            */
+/* ATutorSpaces                                                         */
+/* https://atutorspaces.com                                             */
+/* This program is free software. You can redistribute it and/or        */
+/* modify it under the terms of the GNU General Public License          */
+/* as published by the Free Software Foundation.                        */
+/************************************************************************/
+
 define('AT_INCLUDE_PATH', '../../include/');
 require (AT_INCLUDE_PATH.'vitals.inc.php');
 admin_authenticate(AT_ADMIN_PRIV_ECOMM);
@@ -42,8 +53,8 @@ function is_enrolled($member_id, $course_id) {
 }
 
 $sql	= "SELECT COUNT(*) AS cnt FROM ".TABLE_PREFIX."payments";
-//$sql	= "SELECT COUNT(*) AS cnt FROM ".TABLE_PREFIX."course_enrollment";
 $result = mysql_query($sql, $db);
+
 if (($row = mysql_fetch_assoc($result)) && $row['cnt']) {
 	$num_results = $row['cnt'];
 } else {
@@ -84,9 +95,7 @@ if ($_GET['reset_filter']) {
 
 $page_string = '';
 
-
 $sql = "SELECT P.*, M.login FROM ".TABLE_PREFIX."payments P INNER JOIN ".TABLE_PREFIX."members M USING (member_id)   ORDER BY  timestamp desc LIMIT $offset, $results_per_page";
-
 $result = mysql_query($sql,$db);
 
 require (AT_INCLUDE_PATH.'header.inc.php'); 
@@ -112,11 +121,17 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 		<td align="center"><?php echo $row['login']; ?></td>
 		<td align="center"><?php echo $system_courses[$row['course_id']]['title']; ?></td>
 		<td align="center">
-			<?php if (is_enrolled($row['member_id'], $row['course_id'])): ?>
-				<?php echo _AT('yes'); ?> - <a href="mods/_core/enrolment/admin/enroll_edit.php?id0=<?php echo $row['member_id'].SEP.'func=unenroll'.SEP.'tab=0'.SEP.'course_id='.$row['course_id']; ?>"><?php echo _AT('unenroll'); ?></a>
-			<?php else: ?>
-				<?php echo _AT('no'); ?> - <a href="mods/_core/enrolment/admin/enroll_edit.php?id0=<?php echo $row['member_id'].SEP.'func=enroll'.SEP.'tab=0'.SEP.'course_id='.$row['course_id']; ?>"><?php echo _AT('enroll'); ?></a>
-			<?php endif; ?>
+		<?php 
+			if($row['approved'] == '2'){
+				echo _AT('na');
+			}else{
+			if (is_enrolled($row['member_id'], $row['course_id'])): 
+					echo _AT('yes').' - <a href="mods/_core/enrolment/admin/enroll_edit.php?id0='.$row['member_id'].SEP.'func=unenroll'.SEP.'tab=0'.SEP.'course_id='.$row['course_id'].'">'._AT('unenroll').'</a>';
+			else:
+					echo _AT('no').' - <a href="mods/_core/enrolment/admin/enroll_edit.php?id0='.$row['member_id'].SEP.'func=enroll'.SEP.'tab=0'.SEP.'course_id='.$row['course_id'].'"'._AT('enroll').'</a>';
+			endif; 
+			}
+		?>
 		</td>
 		<td align="center"><?php echo $_config['ec_currency_symbol'].number_format($row['amount'], 2); ?> <?php echo $_config['ec_currency']; ?></td>
 		<td align="center"><?php echo $row['transaction_id']; ?></td>

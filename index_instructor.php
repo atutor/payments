@@ -1,4 +1,15 @@
 <?php
+/************************************************************************/
+/* ATutor																*/
+/************************************************************************/
+/* Copyright (c) 2002 - 2013                                            */
+/* ATutorSpaces                                                         */
+/* https://atutorspaces.com                                             */
+/* This program is free software. You can redistribute it and/or        */
+/* modify it under the terms of the GNU General Public License          */
+/* as published by the Free Software Foundation.                        */
+/************************************************************************/
+
 define('AT_INCLUDE_PATH', '../../include/');
 require (AT_INCLUDE_PATH.'vitals.inc.php');
 
@@ -140,10 +151,9 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 //$sql2 = "SELECT  P.member_id,  P.amount, M.login FROM ".TABLE_PREFIX."payments AS P INNER JOIN ".TABLE_PREFIX."members M USING (member_id) WHERE P.course_id=$_SESSION[course_id] AND P.approved=1";
 
 
-$sql2 = "SELECT  P.member_id,  P.amount, M.login FROM ".TABLE_PREFIX."payments AS P INNER JOIN ".TABLE_PREFIX."members M USING (member_id) WHERE P.course_id='$course_id'";
-
-
+$sql2 = "SELECT  P.member_id,  P.amount, P.approved, M.login FROM ".TABLE_PREFIX."payments AS P INNER JOIN ".TABLE_PREFIX."members M USING (member_id) WHERE P.course_id='$course_id' && P.approved <> '2'";
 $result = mysql_query($sql2,$db);
+
 if (mysql_num_rows($result)) { ?>
 	<table class="data static"  rules="rows" summary="">
 	<thead>

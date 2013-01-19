@@ -2,13 +2,13 @@
 /************************************************************************/
 /* ATutor																*/
 /************************************************************************/
-/* Copyright (c) 2002-2010                                              */
-/* Inclusive Design Institute                                           */
-/* http://atutor.ca                                                     */
+/* Copyright (c) 2002 - 2013                                            */
+/* ATutorSpaces                                                         */
+/* https://atutorspaces.com                                             */
 /* This program is free software. You can redistribute it and/or        */
 /* modify it under the terms of the GNU General Public License          */
 /* as published by the Free Software Foundation.                        */
-/************************************************************************/
+/************************************************************************/**********************************************************************/
 
 if (!defined('AT_INCLUDE_PATH')) { exit; }
 
@@ -631,6 +631,12 @@ function monerisca_print_form($payment_id, $amount, $course_id) {
 	$city = $addslashes($member['city']);
 	$payment_id = $payment_id;
 	//debug($_config);
+	
+	if(isset($_SESSION['seats_requested'])){
+		$this_quantity = $_SESSION['seats_requested'];
+	} else {
+		$this_quantity = '1';
+	}
 	?>
 	<div style="float:left; border:thin solid black; padding:1em; -moz-border-radius:.5em;">
 	<form method="post" action="<?php echo $_config['ec_uri']; ?>">
@@ -641,7 +647,7 @@ function monerisca_print_form($payment_id, $amount, $course_id) {
 		<input type="hidden"  name="id_course" value="<?php echo $course_id; ?>" />
 		<input type="hidden"  name="price_course" value="<?php echo number_format($amount,2); ?>" />
 		<input type="hidden"  name="cust_id" value="<?php echo $_SESSION['member_id']; ?>" />
-		<input type="hidden"  name="quantity_course" value="1" />
+		<input type="hidden"  name="quantity_course" value="<?php echo $this_quantity; ?>" />
 		<input type="hidden"  name="rvar_payment_id" value="<?php echo $payment_id; ?>" />
 		<input type="hidden"  name="bill_first_name" value="<?php echo $firstname; ?>" />
 		<input type="hidden"  name="bill_last_name" value="<?php echo $lastname; ?>" />
@@ -1501,77 +1507,110 @@ function monerisusa_print_form($payment_id, $amount, $course_id) {
 * @return  UPDATE data		Update payments and course enrolment, send email registrant & admin
 */
 function approve_payment($payment_id, $transaction_id) {
-	global $db, $system_courses, $_config, $msg;
-
-	$sql = "UPDATE ".TABLE_PREFIX."payments SET transaction_id='$transaction_id', approved=1 WHERE payment_id=$payment_id";
+	global $db, $system_courses, $_config, $msg, $_base_href;
+	/*
+	if($_SESSION['seats_requested']){
+	$sql = "REPLACE".TABLE_PREFIX."payments (`payment_id`,`timestamp`,'approved'.`transaction_id`,`member_id`,`course_id',`amount`) VALUES('$payment_id','NOW()','1','$transaction_id','$_SESSION[member_id]','$amount')";
 	$result = mysql_query($sql, $db);
+	}else{ */
 
-	// get the course_id for this transaction
-	$sql = "SELECT course_id, member_id FROM ".TABLE_PREFIX."payments WHERE payment_id=$payment_id";
-	$result = mysql_query($sql, $db);
-	$row = mysql_fetch_assoc($result);
-	$course_id = $row['course_id'];
-	$member_id = $row['member_id'];
+	if($_SESSION['payment_id'] > 0){
+		if(isset($_SESSION['seats_requested'])){
+			$sql = "UPDATE ".TABLE_PREFIX."payments SET transaction_id='$transaction_id', approved='2' WHERE payment_id=$payment_id";
+			$result = mysql_query($sql, $db);
+		}else{
+			$sql = "UPDATE ".TABLE_PREFIX."payments SET transaction_id='$transaction_id', approved='1' WHERE payment_id=$payment_id";
+			$result = mysql_query($sql, $db);
+		}
 
-	$sql = "SELECT * FROM ".TABLE_PREFIX."ec_course_fees WHERE course_id=$course_id";
-	if($result = mysql_query($sql,$db)){
-		$course_fee_row = mysql_fetch_assoc($result);
-	}
-	if ($course_fee_row['auto_approve'] == '1'){
-		$sql = "UPDATE ".TABLE_PREFIX."course_enrollment SET approved='y' WHERE member_id=$member_id AND course_id=$course_id";
-		mysql_query($sql, $db);
-		$auto_link_login = array('EC_PAYMENT_CONFIRMED_AUTO',$course_id);
-		$msg->addFeedback($auto_link_login);
-	} else {
-		$msg->addFeedback('EC_PAYMENT_CONFIRMED_MANUAL');
-	}
-	/// Get the course title
-	$course_title  = $system_courses[$course_id]['title'];
-
-	require(AT_INCLUDE_PATH . 'classes/phpmailer/atutormailer.class.php');
-	// If auto email when payment is made, send an email to the instructor (maybe this should be an admin option)
-	if ($course_fee_row['auto_email']) {
-
-		/// Get the instructor's email address
-		$sql = "SELECT email FROM ".TABLE_PREFIX."members WHERE member_id=".$system_courses[$course_id]['member_id'];
-		$result = mysql_query($sql,$db);
+		// get the course_id for this transaction
+		$sql = "SELECT course_id, member_id FROM ".TABLE_PREFIX."payments WHERE payment_id=$payment_id";
+		$result = mysql_query($sql, $db);
 		$row = mysql_fetch_assoc($result);
-		$instructor_email = $row['email'];	
-			
-		$mail = new ATutorMailer;
-		$mail->From     = $_config['contact_email'];
-		$mail->AddAddress($instructor_email);
-		$mail->Subject = _AT('ec_payment_made'); 
-		$mail->Body    = _AT('ec_payment_mail_instruction', $course_title);
-			
-		if(!$mail->Send()) {
-			$msg->printErrors('SENDING_ERROR');
-			return;
-		}
-		$mail->ClearAddresses();
-	}
+		$course_id = $row['course_id'];
+		$member_id = $row['member_id'];
+	
+		// Update course_seats 
 
-	if ($_config['ec_email_admin']) {
-		/// Email Administrator  if set
-		if ($_config['ec_email_admin']){
-			if ($_config['ec_contact_email']){
-				$contact_admin_email = $_config['ec_contact_email'];
-			} else {
-				$contact_admin_email = $_config['contact_email'];
-			}
-			$mail = new ATutorMailer;
-			$mail->From     = $_config['contact_email'];
-			$mail->AddAddress($contact_admin_email);
-			$mail->Subject = _AT('ec_payment_made'); 
-			$mail->Body    = _AT('ec_admin_payment_mail_instruction', $course_title);
+		if($_SESSION['seats_requested']){
+				// get current number of course seats
+				$sql = "SELECT * FROM ".TABLE_PREFIX."course_seats WHERE course_id=$course_id";
+				if($result = mysql_query($sql,$db)){
+					$current_course_seats = mysql_fetch_assoc($result);
+				}
+				$new_seat_limit = ($current_course_seats['seats'] + $_SESSION['seats_requested']);
+				$sql = "REPLACE into ".TABLE_PREFIX."course_seats (`course_id`, `seats`) VALUES ('$course_id', '$new_seat_limit')";
+				if($result = mysql_query($sql,$db)){
+					$msg->addFeedback(array('SEATS_UPDATED', $system_courses[$course_id]['title']));
+				}
+				$_SESSION['course_id'] = $course_id;
+
+		}else{ 
+				// or, Update enrolment when course fees have been paid
+				$sql = "SELECT * FROM ".TABLE_PREFIX."ec_course_fees WHERE course_id=$course_id";
+				if($result = mysql_query($sql,$db)){
+					$course_fee_row = mysql_fetch_assoc($result);
+				}
+				if ($course_fee_row['auto_approve'] == '1'){
+					$sql = "UPDATE ".TABLE_PREFIX."course_enrollment SET approved='y' WHERE member_id=$member_id AND course_id=$course_id";
+					mysql_query($sql, $db);
+					$auto_link_login = array('EC_PAYMENT_CONFIRMED_AUTO',$course_id);
+					$msg->addFeedback($auto_link_login);
+				} else {
+					$msg->addFeedback('EC_PAYMENT_CONFIRMED_MANUAL');
+				}
+
+				/// Get the course title
+				$course_title  = $system_courses[$course_id]['title'];
+
+				require(AT_INCLUDE_PATH . 'classes/phpmailer/atutormailer.class.php');
+				// If auto email when payment is made, send an email to the instructor (maybe this should be an admin option)
+				if ($course_fee_row['auto_email']) {
+
+					/// Get the instructor's email address
+					$sql = "SELECT email FROM ".TABLE_PREFIX."members WHERE member_id=".$system_courses[$course_id]['member_id'];
+					$result = mysql_query($sql,$db);
+					$row = mysql_fetch_assoc($result);
+					$instructor_email = $row['email'];	
 			
-			if (!$mail->Send()) {
-				$msg->printErrors('SENDING_ERROR');
-				return;
+					$mail = new ATutorMailer;
+					$mail->From     = $_config['contact_email'];
+					$mail->AddAddress($instructor_email);
+					$mail->Subject = _AT('ec_payment_made'); 
+					$mail->Body    = _AT('ec_payment_mail_instruction', $course_title);
+			
+					if(!$mail->Send()) {
+						$msg->printErrors('SENDING_ERROR');
+						return;
+					}
+					$mail->ClearAddresses();
+				}
+
+				if ($_config['ec_email_admin']) {
+					/// Email Administrator  if set
+					if ($_config['ec_email_admin']){
+						if ($_config['ec_contact_email']){
+							$contact_admin_email = $_config['ec_contact_email'];
+						} else {
+							$contact_admin_email = $_config['contact_email'];
+						}
+						$mail = new ATutorMailer;
+						$mail->From     = $_config['contact_email'];
+						$mail->AddAddress($contact_admin_email);
+						$mail->Subject = _AT('ec_payment_made'); 
+						$mail->Body    = _AT('ec_admin_payment_mail_instruction', $course_title);
+			
+						if (!$mail->Send()) {
+							$msg->printErrors('SENDING_ERROR');
+							return;
+						}
+					}
+				}
 			}
+		}else{
+			header("Location:".$_base_href."mods/payments/index.php");
 		}
-	}
-}
+}  /// END OF APPROVE PAYMENT
 
 function check_payment_print_form($payment_id, $amount, $course_id){
 	global $db, $system_courses, $_config, $payment_id;

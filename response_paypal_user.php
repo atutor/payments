@@ -1,4 +1,15 @@
 <?php
+/************************************************************************/
+/* ATutor																*/
+/************************************************************************/
+/* Copyright (c) 2002 - 2013                                            */
+/* ATutorSpaces                                                         */
+/* https://atutorspaces.com                                             */
+/* This program is free software. You can redistribute it and/or        */
+/* modify it under the terms of the GNU General Public License          */
+/* as published by the Free Software Foundation.                        */
+/************************************************************************/
+
 $_user_location	= 'users';
 define('AT_INCLUDE_PATH', '../../include/');
 require(AT_INCLUDE_PATH.'vitals.inc.php');
@@ -19,7 +30,8 @@ if ($_GET['st'] == "Completed"){
 }else {
 	$msg->addError('EC_PAYMENT_FAILED');
 }
-
+unset($_SESSION['payment_id']);
+unset($_SESSION['seats_requested']);
 //print_r($_GET);
 header('Location: index.php');
 exit;

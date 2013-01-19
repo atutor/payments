@@ -41,27 +41,20 @@ $this->_pages['tools/enrollment/index.php']['children']       = array('mods/paym
 if (admin_authenticate(AT_ADMIN_PRIV_ECOMM, TRUE) || admin_authenticate(AT_ADMIN_PRIV_ADMIN, TRUE)) {
 	$this->_pages[AT_NAV_ADMIN] = array('mods/payments/payments_admin.php');
 	
-	$this->_pages['mods/payments/payments_admin.php']['title_var'] = 'ec_payments';
-	
+	$this->_pages['mods/payments/payments_admin.php']['title_var'] = 'ec_payments';	
 	$this->_pages['mods/payments/payments_admin.php']['parent']    = AT_NAV_ADMIN;
-
-	$this->_pages['mods/payments/payments_admin.php']['children'] = array('mods/payments/index_admin.php','mods/payments/index_admin_approve.php', 'mods/payments/index_instructor.php','mods/_core/enrolment/admin/index.php', );
+	$this->_pages['mods/payments/payments_admin.php']['children'] = array('mods/payments/index_admin.php', 'mods/payments/index_instructor.php','mods/_core/enrolment/admin/index.php', );
 	
-	$this->_pages['mods/payments/index_instructor.php']['title_var'] = 'ec_payments_courses';	
-	
-	$this->_pages['mods/payments/index_instructor.php']['children']  = array('mods/_core/enrolment/admin/index.php');
-	
+	$this->_pages['mods/payments/index_instructor.php']['title_var'] = 'ec_payments_courses';		
+	$this->_pages['mods/payments/index_instructor.php']['children']  = array('mods/_core/enrolment/admin/index.php');	
 	$this->_pages['mods/payments/index_instructor.php']['parent']    = 'mods/payments/payments_admin.php';
 	
-	$this->_pages['mods/payments/index_admin.php']['title_var'] = 'ec_settings';
-	
+	$this->_pages['mods/payments/index_admin.php']['title_var'] = 'ec_settings';	
 	$this->_pages['mods/payments/index_admin.php']['parent']    = 'mods/payments/payments_admin.php';
-
 	$this->_pages['mods/_core/enrolment/admin/index.php']['children']       = array('mods/payments/index_instructor.php');
 
-	$this->_pages['mods/payments/index_admin_approve.php']['title_var'] = 'ec_approve_manually';
-		
-	$this->_pages['mods/payments/index_admin_approve.php']['parent']    = 'mods/payments/payments_admin.php';
+	//$this->_pages['mods/payments/index_admin_approve.php']['title_var'] = 'ec_approve_manually';	
+	//$this->_pages['mods/payments/index_admin_approve.php']['parent']    = 'mods/payments/payments_admin.php';
 }
 
 /* my start page pages */
