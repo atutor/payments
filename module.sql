@@ -60,7 +60,6 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_required','Required ',NO
 INSERT INTO `language_text` VALUES ('en', '_module','ec_next_step','Next Step ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_location_text','Enter the following settings for your credit card processing service. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_location','Credit card processing location URL ',NOW(),'');
-INSERT INTO `language_text` VALUES ('en', '_module','ec_payments','ATutor Payments ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_confirmation','Payment Confirmation ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_received','An ATutor Payment Received ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_retrieve_admin','An ATutor payment has been received. To review the payment login to ATutor as the administrator, choose the Payments tab, then select Review Payments  ',NOW(),'');
@@ -79,7 +78,6 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_enrollpay_confirmed_manu
 INSERT INTO `language_text` VALUES ('en', '_module','ec_enrollpay_confirmed_auto','Your payment has been received, and you have been enrolled in <strong>%s</strong>. You can now <a href="login.php?course=%s">login to the course</a>. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_mail_instruction','Course fees have been received for the course: %s. Login as the course instructor and review the payment through the Manage tab, then choose Payments. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_mail_instruction','Course fees have been recieved for course %. Login to the Payments utility to review the payment, and to approved the enrollment if Auto Approve Enrollment has not been set. ',NOW(),'');
-INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_made','Fees Received ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_allow_instructors','Allow instructors to manage payments ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_cancel','Cancel',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_auto_email','Email instructor when a payment has been received',NOW(),'');
@@ -111,7 +109,6 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_paybypaypal','Pay by Pay
 INSERT INTO `language_text` VALUES ('en', '_module','ec_store_log','Keep transaction log ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_log_file','Full path to writable transaction log file. (required if log is enable, create writable  file manually if necessary) ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_export_data','Export Data Displayed Below',NOW(),'');
-INSERT INTO `language_text` VALUES ('en', '_module','ec_date_picker','Select a date range to display. (e.g. 2007-2-6)',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_contact_email','EMail notification of payments to: (if different from the ATutor contact email, set in System Preferences)',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_contact_address','Address where cheques should be sent. (leave empty to disabled cheque payments)',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_date_picker','The table below shows by default the past 30 payments. Use the date selectors to select a specific date range.',NOW(),'');
@@ -122,7 +119,6 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_more_info_required','<st
 INSERT INTO `language_text` VALUES ('en', '_module','ec_province','State/Province',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_cc_cvd_number','Card CVD Number',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_cc_cvd_info','(3 or 4 digit number on the back of the card)',NOW(),'');
-INSERT INTO `language_text` VALUES ('en', '_module','ec_cc_cvd_number','Card CVD Number',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_seats_requested','Course Seats Requested ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_course_seats_price','Seat Price  ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_course_seats','Number of Seats Requested  ',NOW(),'');
