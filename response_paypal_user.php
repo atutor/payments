@@ -18,7 +18,6 @@ $transaction_id = $addslashes($_REQUEST['tx']);
 $payment_id = intval($_REQUEST['item_number']);
 
 if ($_GET['st'] == "Completed"){
-
 	approve_payment($payment_id, $transaction_id);
 	$msg->addFeedback('ACTION_COMPLETED_SUCCESSFULLY');
 
@@ -33,6 +32,7 @@ if ($_GET['st'] == "Completed"){
 unset($_SESSION['payment_id']);
 unset($_SESSION['seats_requested']);
 //print_r($_GET);
+//exit;
 header('Location: index.php');
 exit;
 ?>

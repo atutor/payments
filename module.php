@@ -43,7 +43,7 @@ if (admin_authenticate(AT_ADMIN_PRIV_ECOMM, TRUE) || admin_authenticate(AT_ADMIN
 	
 	$this->_pages['mods/payments/payments_admin.php']['title_var'] = 'ec_payments';	
 	$this->_pages['mods/payments/payments_admin.php']['parent']    = AT_NAV_ADMIN;
-	$this->_pages['mods/payments/payments_admin.php']['children'] = array('mods/payments/index_admin.php', 'mods/payments/index_instructor.php','mods/_core/enrolment/admin/index.php', );
+	$this->_pages['mods/payments/payments_admin.php']['children'] = array('mods/payments/index_admin.php', 'mods/payments/index_instructor.php','mods/_core/enrolment/admin/index.php');
 	
 	$this->_pages['mods/payments/index_instructor.php']['title_var'] = 'ec_payments_courses';		
 	$this->_pages['mods/payments/index_instructor.php']['children']  = array('mods/_core/enrolment/admin/index.php');	

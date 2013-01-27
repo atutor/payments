@@ -21,6 +21,7 @@ $req = 'cmd=_notify-validate';
 foreach ($_POST as $key => $value) {
 	$value = urlencode($stripslashes($value));
 	$req .= "&$key=$value";
+		//log_paypal_ipn_requests($req);
 }
 
 $host = parse_url($_config['ec_uri']);
@@ -38,47 +39,55 @@ $fp = fsockopen($host, 80, $errno, $errstr, 30);
 if (!$fp) { exit; }
 
 $result = '';
+unset($error);
+	//log_paypal_ipn_requests( $req);
 fputs($fp, $header . $req);
 while (!feof($fp)) { 
 	$result .= fgets($fp, 1024);
 }
-
-if (strpos($result, 'VERIFIED') === FALSE) {
-	// Error: not VERIFIED by PayPal
-	log_paypal_ipn_requests('INVALID (1)' . $result);
-	return;
-} else if (strcasecmp($_POST['payment_status'], 'Completed')) {
-	// Error: not completed
-	log_paypal_ipn_requests('INCOMPLETE (2)');
-	return;
+		//log_paypal_ipn_requests("RESULT: ".$result);
+if (strcmp ($result, "VERIFIED") == 0) {
+	$ppmsg .= " Verified: ";
+} else if (strcasecmp($_POST['payment_status'], 'Completed') == 0) {
+	$ppmsg .= " Completed: ";
+} else {
+	$ppmsg .= " NOT VERIFIED ";
+	//log_paypal_ipn_requests( $ppmsg . $result);
+	$error = 2;
 }
 
-$error = false;
+
 $_POST['item_number'] = $addslashes($_POST['item_number']);
 $_POST['txn_id']      = $addslashes($_POST['txn_id']);
 
 // check that txn_id has not been previously processed
 $sql = "SELECT transaction_id, amount FROM ".TABLE_PREFIX."payments WHERE payment_id='$_POST[item_number]'";
-$result = mysql_query($sql, $db);
-if (!($row = mysql_fetch_assoc($result))) {
+$result2 = mysql_query($sql, $db);
+if (!($row = mysql_fetch_assoc($result2))) {
 	// Error: no valid payment_id
-	$error = 3;
+	$ppmsg .= " No PaymentID ";
+	$error = 4;
 } else if ($row['transaction_id']) {
 	// Error: this transaction has already been processed
-	$error = 4;
+	$ppmsg .= " Duplicate ";
+	$error = 5;
 } else if ($row['amount'] != $_POST['mc_gross']) {
 	// Error: wrong amount sent
-	$error = 5;
+	$ppmsg .= " Mismatched Amounts ";
+	$error = 6;
 } else if ($_config['ec_currency'] != $_POST['mc_currency']) {
 	// Error: wrong currency
-	$error = 6;
+	$ppmsg .= " Wrong Currency ";
+	$error = 7;
 }
 
-if (!$error) {
+if (!isset($error)) {
 	approve_payment($_POST['item_number'], $_POST['txn_id']);
-	$status = 'VALID';
+	$status = "VALID ($error)";
+	log_paypal_ipn_requests($status . $result . $ppmsg);
 } else {
 	$status = "INVALID ($error)";
+	log_paypal_ipn_requests($status . $result . $ppmsg);
 }
-log_paypal_ipn_requests($status);
+
 ?>

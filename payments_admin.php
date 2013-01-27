@@ -115,8 +115,15 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 		<th scope="col"></th>
 	</tr>
 	</thead>
-	<?php while($row = mysql_fetch_assoc($result)): ?>
-	<tr>
+	<?php while($row = mysql_fetch_assoc($result)): 
+				$payment_count++;
+			if(is_int($payment_count/2)){
+				$rowcolor = "even";	
+			} else{
+				$rowcolor = "odd";
+			}
+	?>
+	<tr class="<?php echo $rowcolor; ?>">
 		<td align="center"><?php echo $row['timestamp']; ?></td>
 		<td align="center"><?php echo $row['login']; ?></td>
 		<td align="center"><?php echo $system_courses[$row['course_id']]['title']; ?></td>

@@ -8,7 +8,7 @@
 /* This program is free software. You can redistribute it and/or        */
 /* modify it under the terms of the GNU General Public License          */
 /* as published by the Free Software Foundation.                        */
-/************************************************************************/**********************************************************************/
+/************************************************************************/
 
 if (!defined('AT_INCLUDE_PATH')) { exit; }
 
@@ -1538,10 +1538,12 @@ function approve_payment($payment_id, $transaction_id) {
 				if($result = mysql_query($sql,$db)){
 					$current_course_seats = mysql_fetch_assoc($result);
 				}
+				
 				$new_seat_limit = ($current_course_seats['seats'] + $_SESSION['seats_requested']);
 				$sql = "REPLACE into ".TABLE_PREFIX."course_seats (`course_id`, `seats`) VALUES ('$course_id', '$new_seat_limit')";
+	
 				if($result = mysql_query($sql,$db)){
-					$msg->addFeedback(array('SEATS_UPDATED', $system_courses[$course_id]['title']));
+					$msg->addFeedback(array('SEATS_UPDATED', '<a href="'.$_base_href.'bounce.php?course='.$course_id.'">'.$system_courses[$course_id]['title'].'</a>'));
 				}
 				$_SESSION['course_id'] = $course_id;
 
