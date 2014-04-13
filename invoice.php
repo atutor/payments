@@ -5,9 +5,8 @@ require (AT_INCLUDE_PATH.'vitals.inc.php');
 
 require (AT_INCLUDE_PATH.'html/frameset/header.inc.php');
 
-$sql = "SELECT * FROM ".TABLE_PREFIX."members WHERE member_id=$_SESSION[member_id]";
-$result = mysql_query($sql,$db);
-$row = mysql_fetch_assoc($result);
+$sql = "SELECT * FROM %smembers WHERE member_id=%d";
+$row = queryDB($sql, array(TABLE_PREFIX, $_SESSION['member_id']), TRUE);
 
 $_GET['payment_id'] = intval($_GET['payment_id']);
 $amount = floatval($_GET['amount']);

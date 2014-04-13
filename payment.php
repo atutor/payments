@@ -2,7 +2,7 @@
 /************************************************************************/
 /* ATutor																*/
 /************************************************************************/
-/* Copyright (c) 2002 - 2013                                            */
+/* Copyright (c) 2002 - 2014                                            */
 /* ATutorSpaces                                                         */
 /* https://atutorspaces.com                                             */
 /* This program is free software. You can redistribute it and/or        */
@@ -29,9 +29,10 @@ if(isset($_POST['seats_requested'])){
 
 // check if this is a seats purchase
 if(!isset($seats_requested)){
-	$sql = "SELECT course_fee FROM ".TABLE_PREFIX."ec_course_fees WHERE course_id=$course_id";
-	$result = mysql_query($sql, $db);
-	if ($this_course_fee = mysql_fetch_assoc($result)) {
+	$sql = "SELECT course_fee FROM %sec_course_fees WHERE course_id=%d";
+	$this_course_fee = queryDB($sql, array(TABLE_PREFIX, $course_id), TRUE);
+
+	if(count($this_course_fee) >0){
 		$this_course_fee = $this_course_fee['course_fee'];
 	} else {
 		header('location: index.php');
@@ -39,9 +40,10 @@ if(!isset($seats_requested)){
 	}
 	
 	///Check if a partial payment has already been made so the balance can be calculated
-	$sql4 = "SELECT SUM(amount) AS total_amount FROM ".TABLE_PREFIX."payments WHERE course_id='$course_id' AND approved=1 AND member_id=$member_id";
-	$result4 = mysql_query($sql4, $db);
-	while ($row4 = mysql_fetch_assoc($result4)) {
+	$sql4 = "SELECT SUM(amount) AS total_amount FROM %spayments WHERE course_id=%d AND approved=1 AND member_id=%d";
+	$rows_amounts = queryDB($sql4, array(TABLE_PREFIX, $course_id, $member_id));
+
+    foreach($rows_amounts as $row4){
 		if($row4['total_amount'] > 0){
 			$amount_paid = $row4['total_amount'];
 		} else {
@@ -58,18 +60,16 @@ if(!isset($seats_requested)){
 
 require (AT_INCLUDE_PATH.'header.inc.php');
 
-
-
 if($_SESSION['payment_id']){
-$sql = "REPLACE INTO ".TABLE_PREFIX."payments VALUES ('$_SESSION[payment_id]', NULL, 0, '', '{$_SESSION['member_id']}', '$course_id', '$balance_course_fee')";
+    $sql = "REPLACE INTO %spayments VALUES (%d, NULL, 0, '', %d, %d, '%s')";
+    $result = queryDB($sql, array(TABLE_PREFIX, $_SESSION['payment_id'], $_SESSION['member_id'], $course_id, $balance_course_fee));
 } else {
-$sql = "INSERT INTO ".TABLE_PREFIX."payments VALUES ('', NULL, 0, '', '{$_SESSION['member_id']}', '$course_id', '$balance_course_fee')";
+    $sql = "INSERT INTO %spayments VALUES ('', NULL, 0, '', %d, %d, '%s')";
+    $result = queryDB($sql, array(TABLE_PREFIX, $_SESSION['member_id'], $course_id, $balance_course_fee));
 }
 
-$result = mysql_query($sql, $db);
-
-if(!isset($_SESSION[payment_id])){
-	$payment_id = mysql_insert_id($db);
+if(!isset($_SESSION['payment_id'])){
+	$payment_id = at_insert_id();
 	$_SESSION['payment_id'] = $payment_id;
 } else{
 	$payment_id = $_SESSION['payment_id'];
@@ -77,7 +77,7 @@ if(!isset($_SESSION[payment_id])){
 if(isset($seats_requested)){
 	$_SESSION['seats_requested'] = $seats_requested;
 }
-//debug($payment_id);
+
 ?>
 <div class="input-form">
 	<div class="row">

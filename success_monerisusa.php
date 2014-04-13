@@ -2,7 +2,7 @@
 /************************************************************************/
 /* ATutor																*/
 /************************************************************************/
-/* Copyright (c) 2002 - 2013                                            */
+/* Copyright (c) 2002 - 2014                                            */
 /* ATutorSpaces                                                         */
 /* https://atutorspaces.com                                             */
 /* This program is free software. You can redistribute it and/or        */

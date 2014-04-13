@@ -49,6 +49,9 @@ if (admin_authenticate(AT_ADMIN_PRIV_ECOMM, TRUE) || admin_authenticate(AT_ADMIN
 	$this->_pages['mods/payments/index_instructor.php']['children']  = array('mods/_core/enrolment/admin/index.php');	
 	$this->_pages['mods/payments/index_instructor.php']['parent']    = 'mods/payments/payments_admin.php';
 	
+	$this->_pages['mods/payments/payments_delete.php']['title_var'] = 'ec_payments';	
+	$this->_pages['mods/payments/payments_delete.php']['parent'] = 'mods/payments/payments_admin.php';	
+		
 	$this->_pages['mods/payments/index_admin.php']['title_var'] = 'ec_settings';	
 	$this->_pages['mods/payments/index_admin.php']['parent']    = 'mods/payments/payments_admin.php';
 	$this->_pages['mods/_core/enrolment/admin/index.php']['children']       = array('mods/payments/index_instructor.php');

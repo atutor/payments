@@ -58,8 +58,10 @@ if (isset($_POST['submit']) == "submit") {
 		$_POST['ec_auto_email']   = intval($_POST['ec_auto_email']);
 		$course_id   = intval($_POST['ec_course_id']);
 		
-		$sql = "REPLACE INTO ".TABLE_PREFIX."ec_course_fees VALUES ('$course_id', '{$_POST['ec_course_fee']}', {$_POST['ec_auto_approve']}, {$_POST['ec_auto_email']})";
-		if ($result = mysql_query($sql,$db)) {
+		$sql = "REPLACE INTO %sec_course_fees VALUES (%d, '%s', %d, %s)";
+		$result = queryDB($sql, array(TABLE_PREFIX, $course_id, $_POST['ec_course_fee'], $_POST['ec_auto_approve'], $_POST['ec_auto_email']));
+
+		if ($result > 0) {
 			$msg->addFeedback('ACTION_COMPLETED_SUCCESSFULLY');
 		}else{
 			$msg->addError('EC_COURSE_PAYMENT_SETTINGS_NOT_SAVED');
@@ -72,24 +74,27 @@ if (isset($_POST['submit']) == "submit") {
 
 if($_GET['func'] == 'enroll'){
 	$_GET['func']   = $addslashes($_GET['func']);
-	$sql = "REPLACE INTO ".TABLE_PREFIX."course_enrollment SET approved = 'y' WHERE course_id= '$_GET[course_id]' AND member_id = '$_GET[id0]'";
-	$result = mysql_query($sql,$db);
+
+	$sql = "REPLACE INTO %scourse_enrollment SET approved = 'y' WHERE course_id= %d AND member_id = %d";
+	$result = queryDB($sql, array(TABLE_PREFIX, $_GET['course_id'], $_GET['id0']));
 }else if($_GET['func'] == 'unenroll'){
 
 	$_GET['func']   = $addslashes($_GET['func']);
-	$sql = "REPLACE INTO ".TABLE_PREFIX."course_enrollment SET approved = 'n' WHERE course_id= '$_GET[course_id]' AND member_id = '$_GET[id0]'";
-	$result = mysql_query($sql,$db);
+
+	$sql = "REPLACE INTO %scourse_enrollment SET approved = 'n' WHERE course_id= %d AND member_id = %d";
+	$result = queryDB($sql, array(TABLE_PREFIX, $_GET['course_id'], $_GET['id0']));
 }
 
 if(isset($course_id) && $course_id != "--" && $course_id != "-1"){
-$sql = "SELECT * from ".TABLE_PREFIX."ec_course_fees WHERE course_id='$course_id'";
 
-$result = mysql_query($sql,$db);
-if ($row = mysql_fetch_assoc($result)){
-	$this_course_fee   = $row['course_fee'];
-	$this_auto_approve = $row['auto_approve'];
-	$this_auto_email   = $row['auto_email'];
-}
+    $sql = "SELECT * from %sec_course_fees WHERE course_id=%d";
+    $row = queryDB($sql, array(TABLE_PREFIX, $course_id), TRUE);
+
+    if (count($row) > 0){
+        $this_course_fee   = $row['course_fee'];
+        $this_auto_approve = $row['auto_approve'];
+        $this_auto_email   = $row['auto_email'];
+    }
 }
 require (AT_INCLUDE_PATH.'header.inc.php');
 ?>
@@ -105,9 +110,9 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 			<select name="ec_course_id">	
 			<option value="--">--choose--</option>
 			<?php
-			$sql = "SELECT course_id, title FROM ".TABLE_PREFIX."courses ORDER BY title ASC";
-			$result = mysql_query($sql, $db);
-			while($row = mysql_fetch_assoc($result)){
+			$sql = "SELECT course_id, title FROM %scourses ORDER BY title ASC";
+			$rows_courses = queryDB($sql, array(TABLE_PREFIX));
+			foreach($rows_courses as $row){
 				if($row['course_id'] == $course_id){
 					echo '<option value="'.$row['course_id'].'" selected="selected">'.$row['title'].'</option>';
 				}else{
@@ -146,15 +151,10 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 </div>
 <?php
 
+$sql2 = "SELECT  P.member_id,  P.amount, P.approved, M.login FROM %spayments AS P INNER JOIN %smembers M USING (member_id) WHERE P.course_id=%d && P.approved <> '2'";
+$rows_members = queryDB($sql2, array(TABLE_PREFIX, TABLE_PREFIX, $course_id));
 
-
-//$sql2 = "SELECT  P.member_id,  P.amount, M.login FROM ".TABLE_PREFIX."payments AS P INNER JOIN ".TABLE_PREFIX."members M USING (member_id) WHERE P.course_id=$_SESSION[course_id] AND P.approved=1";
-
-
-$sql2 = "SELECT  P.member_id,  P.amount, P.approved, M.login FROM ".TABLE_PREFIX."payments AS P INNER JOIN ".TABLE_PREFIX."members M USING (member_id) WHERE P.course_id='$course_id' && P.approved <> '2'";
-$result = mysql_query($sql2,$db);
-
-if (mysql_num_rows($result)) { ?>
+if (count($rows_members) > 0) { ?>
 	<table class="data static"  rules="rows" summary="">
 	<thead>
 	<tr>
@@ -164,7 +164,7 @@ if (mysql_num_rows($result)) { ?>
 	</tr>
 	</thead>
 	<?php
-		while($row = mysql_fetch_assoc($result)){
+	    foreach($rows_members as $row){
 			echo '<tr>';
 			if(admin_authenticate(AT_ADMIN_PRIV_ECOMM, TRUE) ||admin_authenticate(AT_ADMIN_PRIV_ADMIN, TRUE)){
 				echo '<td align="center"><a href="mods/_core/users/edit_user.php?id='.$row['member_id'].'">'.$row['login'].'</a></td>';
@@ -173,16 +173,18 @@ if (mysql_num_rows($result)) { ?>
 			}
 			echo '<td align="center">'.$_config['ec_currency_symbol'].number_format($row['amount'],2).' '.$_config['ec_currency'].'</td>';
 			
-			$sql4 = "SELECT * from ".TABLE_PREFIX."course_enrollment WHERE course_id = '$course_id' AND member_id = '$row[member_id]'";
-			if($result4 = mysql_query($sql4, $db)){
+			$sql4 = "SELECT * from %scourse_enrollment WHERE course_id = %d AND member_id = %d";
+			$rows_enrollment = queryDB($sql4, array(TABLE_PREFIX, $course_id, $row['member_id']));
+			
+			if(count($rows_enrollment) > 0){
 				if(admin_authenticate(AT_ADMIN_PRIV_ECOMM, TRUE) ||admin_authenticate(AT_ADMIN_PRIV_ADMIN, TRUE)){
 					$enroll_manager = "mods/_core/enrolment/admin/enroll_edit.php";
 				}else{
 					$enroll_manager = "mods/_core/enrolment/enroll_edit.php";
 				}
-				if(mysql_num_rows($result4) >= '1'){
-					while($row4 = mysql_fetch_assoc($result4)){
-						
+				if(count($rows_enrollment) > '1'){
+				    foreach($rows_enrollment as $row4){
+
 						if($row4['approved'] == 'y'){
 							echo '<td align="center">'._AT('yes').'<small> (<a href="'.$enroll_manager.'?id0='.$row['member_id'].SEP.'func=unenroll'.SEP.'tab=0'.SEP.'course_id='.$course_id.'">'._AT('unenroll').'</a>)</small></td>';
 						}else{

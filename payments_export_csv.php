@@ -1,5 +1,7 @@
 <?php
+echo "File is not anabled. Please let your ATutor administrator know."
 exit;
+
 define('AT_INCLUDE_PATH', '../../include/');
 require(AT_INCLUDE_PATH.'vitals.inc.php');
 

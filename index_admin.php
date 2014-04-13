@@ -42,59 +42,51 @@ if (isset($_POST['cancel'])) {
 		//$msg->addError('EC_PASSWORD_EMPTY');
 	//}		
 	if (!$msg->containsErrors()) {
-		$_POST['ec_gateway'] = $addslashes($_POST['ec_gateway']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_gateway', '$_POST[ec_gateway]')";
-		mysql_query($sql, $db);
 
-		$_POST['ec_uri'] = $addslashes($_POST['ec_uri']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_uri', '$_POST[ec_uri]')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_gateway', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_gateway']));
 
-		$_POST['ec_vendor_id'] = $addslashes($_POST['ec_vendor_id']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_vendor_id', '$_POST[ec_vendor_id]')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_uri', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_uri']));
 
-		$_POST['ec_password'] = $addslashes($_POST['ec_password']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_password', '$_POST[ec_password]')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_vendor_id', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_vendor_id']));
+		
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_password', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_password']));
 
-		$_POST['ec_currency'] = $addslashes($_POST['ec_currency']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_currency', '$_POST[ec_currency]')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_currency', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_currency']));
 
-		$_POST['ec_currency_other'] = $addslashes($_POST['ec_currency_other']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_currency_other', '$_POST[ec_currency_other]')";
-		mysql_query($sql, $db);
-
-		if($_POST['ec_currency_other']){
-			$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_currency', '')";
-			mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_currency_other', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_currency_other']));
+		
+		if($_POST['ec_currency_other'] != ''){
+			$sql = "REPLACE INTO %sconfig VALUES ('ec_currency', '%s')";
+			queryDB($sql, array($sql, array(TABLE_PREFIX, $_POST['ec_currency_other'])));
 		}
 
-		$_POST['ec_currency_symbol'] = $_POST['ec_currency_symbol'];
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_currency_symbol', '$_POST[ec_currency_symbol]')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_currency_symbol', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_currency_symbol']));
 
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_allow_instructors', '{$_POST['ec_allow_instructors']}')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_allow_instructors', %d)";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_allow_instructors']));
 
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_email_admin', '{$_POST['ec_email_admin']}')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_email_admin', %d)";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_email_admin']));
 
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_store_log', '{$_POST['ec_store_log']}')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_store_log', %d)";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_store_log']));
+		
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_log_file', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_log_file']));
 
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_log_file', '{$_POST['ec_log_file']}')";
-		mysql_query($sql, $db);
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_contact_email', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_contact_email']));
 
-		$_POST['ec_contact_email'] = $addslashes($_POST['ec_contact_email']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_contact_email', '$_POST[ec_contact_email]')";
-		mysql_query($sql, $db);
-
-		$_POST['ec_contact_address'] = $addslashes($_POST['ec_contact_address']);
-		$sql = "REPLACE INTO ".TABLE_PREFIX."config VALUES ('ec_contact_address', '$_POST[ec_contact_address]')";
-		mysql_query($sql, $db);
-
+		$sql = "REPLACE INTO %sconfig VALUES ('ec_contact_address', '%s')";
+		queryDB($sql, array(TABLE_PREFIX, $_POST['ec_contact_address']));
+		
 		$msg->addFeedback('ACTION_COMPLETED_SUCCESSFULLY');
 
 		header('Location: '.$_SERVER['PHP_SELF']);

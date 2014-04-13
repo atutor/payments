@@ -107,13 +107,13 @@ function beanstream_print_form($payment_id, $amount, $course_id) {
 
  	global $_config, $db, $addslashes;
 	if($_config['ec_gateway'] == 'BeanStream'){
-	$mtid = mysql_insert_id($db);
+	$mtid = at_insert_id();
 	$mkey = md5($mtid.$amount.$password);
-	$sql = "SELECT * from ".TABLE_PREFIX."members WHERE member_id = $_SESSION[member_id]";
 
-	$result = mysql_query($sql, $db);
-
-	while($row = mysql_fetch_assoc($result)){
+	$sql = "SELECT * from %smembers WHERE member_id = %d";
+	$row_member = queryDB($sql, array(TABLE_PREFIX, $_SESSION['member_id']));
+	
+	foreach($row_member as $row){
 				$member['firstname'] = $row['first_name'];
 				$member['lastname'] = $row['last_name'];
 				$member['email'] = $row['email'];
@@ -136,6 +136,13 @@ function beanstream_print_form($payment_id, $amount, $course_id) {
 	$province = $addslashes($member['province']);
 	$city = $addslashes($member['city']);
 	$payment_id = $_SESSION['course_title'];
+	
+	if(isset($_SESSION['seats_requested'])){
+		$this_quantity = $_SESSION['seats_requested'];
+	} else {
+		$this_quantity = '1';
+	}
+	
 	?>
 	<div style="float:left; border:thin solid black; padding:1em; -moz-border-radius:.5em;">
 	<form method="post" action="<?php echo $_config['ec_uri']; ?>">
@@ -570,12 +577,13 @@ function beanstream_print_form($payment_id, $amount, $course_id) {
 	</select>
 	 <label for="expyear"><?php echo _AT('ec_cc_expiry_year'); ?></label>
 	<select name="trnExpYear" id="expyear">
-	<option value="10">2010</option>
-	<option value="11">2011</option>
-	<option value="12">2012</option>
-	<option value="13">2013</option>
-	<option value="14">2014</option>
 
+
+	<option value="14">2014</option>
+	<option value="15">2015</option>
+	<option value="16">2016</option>
+	<option value="17">2017</option>
+	<option value="18">2018</option>
 	</select><br /><br />
 	  <label for="cvd"><?php echo _AT('ec_cc_cvd_number'); ?></label>
 	  <input type="test"  name="trnCardCvd" size = "4" value="<?php echo $cvd; ?>"> <small><?php echo _AT('ec_cc_cvd_number'); ?></strong><br /><br />
@@ -603,11 +611,11 @@ function monerisca_print_form($payment_id, $amount, $course_id) {
 
  	global $_config, $db, $addslashes, $system_courses;
 	if($_config['ec_gateway'] == 'Monerisca'){
-	$sql = "SELECT * from ".TABLE_PREFIX."members WHERE member_id = $_SESSION[member_id]";
 
-	$result = mysql_query($sql, $db);
-
-	while($row = mysql_fetch_assoc($result)){
+	$sql = "SELECT * from %smembers WHERE member_id = %d";
+	$result = queryDB($sql, array(TABLE_PREFIX, $_SESSION['member_id']));
+	
+	foreach($row_member as $row){
 				$member['firstname'] = $row['first_name'];
 				$member['lastname'] = $row['last_name'];
 				$member['email'] = $row['email'];
@@ -630,7 +638,6 @@ function monerisca_print_form($payment_id, $amount, $course_id) {
 	$province = $addslashes($member['province']);
 	$city = $addslashes($member['city']);
 	$payment_id = $payment_id;
-	//debug($_config);
 	
 	if(isset($_SESSION['seats_requested'])){
 		$this_quantity = $_SESSION['seats_requested'];
@@ -1059,11 +1066,11 @@ function monerisusa_print_form($payment_id, $amount, $course_id) {
 
  	global $_config, $db, $addslashes, $system_courses;
 	if($_config['ec_gateway'] == 'Monerisusa'){
-	$sql = "SELECT * from ".TABLE_PREFIX."members WHERE member_id = $_SESSION[member_id]";
 
-	$result = mysql_query($sql, $db);
-
-	while($row = mysql_fetch_assoc($result)){
+	$sql = "SELECT * from %smembers WHERE member_id = %d";
+	$result = queryDB($sql, array(TABLE_PREFIX, $_SESSION['member_id']));
+	
+	foreach($row_member as $row){
 				$member['firstname'] = $row['first_name'];
 				$member['lastname'] = $row['last_name'];
 				$member['email'] = $row['email'];
@@ -1086,7 +1093,13 @@ function monerisusa_print_form($payment_id, $amount, $course_id) {
 	$province = $addslashes($member['province']);
 	$city = $addslashes($member['city']);
 	$payment_id = $payment_id;
-	//debug($_config);
+
+	if(isset($_SESSION['seats_requested'])){
+		$this_quantity = $_SESSION['seats_requested'];
+	} else {
+		$this_quantity = '1';
+	}
+	
 	?>
 	<div style="float:left; border:thin solid black; padding:1em; -moz-border-radius:.5em;">
 	<form method="post" action="<?php echo $_config['ec_uri']; ?>">
@@ -1507,26 +1520,25 @@ function monerisusa_print_form($payment_id, $amount, $course_id) {
 * @return  UPDATE data		Update payments and course enrolment, send email registrant & admin
 */
 function approve_payment($payment_id, $transaction_id) {
-	global $db, $system_courses, $_config, $msg, $_base_href;
-	/*
-	if($_SESSION['seats_requested']){
-	$sql = "REPLACE".TABLE_PREFIX."payments (`payment_id`,`timestamp`,'approved'.`transaction_id`,`member_id`,`course_id',`amount`) VALUES('$payment_id','NOW()','1','$transaction_id','$_SESSION[member_id]','$amount')";
-	$result = mysql_query($sql, $db);
-	}else{ */
+	global $system_courses, $_config, $msg, $_base_href;
 
 	if($_SESSION['payment_id'] > 0){
 		if(isset($_SESSION['seats_requested'])){
-			$sql = "UPDATE ".TABLE_PREFIX."payments SET transaction_id='$transaction_id', approved='2' WHERE payment_id=$payment_id";
-			$result = mysql_query($sql, $db);
+
+			$sql = "UPDATE %spayments SET transaction_id='%s', approved='2' WHERE payment_id=%d";
+			$result = queryDB($sql, array(TABLE_PREFIX, $transaction_id, $payment_id));
+						
 		}else{
-			$sql = "UPDATE ".TABLE_PREFIX."payments SET transaction_id='$transaction_id', approved='1' WHERE payment_id=$payment_id";
-			$result = mysql_query($sql, $db);
+
+			$sql = "UPDATE %spayments SET transaction_id='%s', approved='1' WHERE payment_id=%d";
+			$result = queryDB($sql, array(TABLE_PREFIX, $transaction_id, $payment_id));
+			
 		}
 
 		// get the course_id for this transaction
-		$sql = "SELECT course_id, member_id FROM ".TABLE_PREFIX."payments WHERE payment_id=$payment_id";
-		$result = mysql_query($sql, $db);
-		$row = mysql_fetch_assoc($result);
+		$sql = "SELECT course_id, member_id FROM %spayments WHERE payment_id=%d";
+		$row = queryDB($sql, array(TABLE_PREFIX, $payment_id), TRUE);
+
 		$course_id = $row['course_id'];
 		$member_id = $row['member_id'];
 	
@@ -1534,30 +1546,34 @@ function approve_payment($payment_id, $transaction_id) {
 
 		if($_SESSION['seats_requested']){
 				// get current number of course seats
-				$sql = "SELECT * FROM ".TABLE_PREFIX."course_seats WHERE course_id=$course_id";
-				if($result = mysql_query($sql,$db)){
-					$current_course_seats = mysql_fetch_assoc($result);
-				}
+				$sql = "SELECT * FROM %scourse_seats WHERE course_id=%d";
+				$current_course_seats = queryDB($sql, array(TABLE_PREFIX, $course_id), TRUE);
 				
 				$new_seat_limit = ($current_course_seats['seats'] + $_SESSION['seats_requested']);
-				$sql = "REPLACE into ".TABLE_PREFIX."course_seats (`course_id`, `seats`) VALUES ('$course_id', '$new_seat_limit')";
-	
-				if($result = mysql_query($sql,$db)){
+
+				$sql = "REPLACE into %scourse_seats (`course_id`, `seats`) VALUES (%d, %d)";
+	            $result = queryDB($sql, array(TABLE_PREFIX, $course_id, $new_seat_limit));
+
+				if($result > 0){
 					$msg->addFeedback(array('SEATS_UPDATED', '<a href="'.$_base_href.'bounce.php?course='.$course_id.'">'.$system_courses[$course_id]['title'].'</a>'));
 				}
 				$_SESSION['course_id'] = $course_id;
 
 		}else{ 
 				// or, Update enrolment when course fees have been paid
-				$sql = "SELECT * FROM ".TABLE_PREFIX."ec_course_fees WHERE course_id=$course_id";
-				if($result = mysql_query($sql,$db)){
-					$course_fee_row = mysql_fetch_assoc($result);
-				}
+
+				$sql = "SELECT * FROM %sec_course_fees WHERE course_id=%d";
+				$course_fee_row = queryDB($sql, array(TABLE_PREFIX, $course_id), TRUE);
+								
 				if ($course_fee_row['auto_approve'] == '1'){
-					$sql = "UPDATE ".TABLE_PREFIX."course_enrollment SET approved='y' WHERE member_id=$member_id AND course_id=$course_id";
-					mysql_query($sql, $db);
-					$auto_link_login = array('EC_PAYMENT_CONFIRMED_AUTO',$course_id);
-					$msg->addFeedback($auto_link_login);
+
+					$sql = "UPDATE %scourse_enrollment SET approved='y' WHERE member_id=%d AND course_id=%d";
+					$result = queryDB($sql, array(TABLE_PREFIX, $member_id, $course_id));					
+					if($result > 0){
+					    $auto_link_login = array('EC_PAYMENT_CONFIRMED_AUTO',$course_id);
+					    $msg->addFeedback($auto_link_login);
+					}
+					
 				} else {
 					$msg->addFeedback('EC_PAYMENT_CONFIRMED_MANUAL');
 				}
@@ -1570,9 +1586,10 @@ function approve_payment($payment_id, $transaction_id) {
 				if ($course_fee_row['auto_email']) {
 
 					/// Get the instructor's email address
-					$sql = "SELECT email FROM ".TABLE_PREFIX."members WHERE member_id=".$system_courses[$course_id]['member_id'];
-					$result = mysql_query($sql,$db);
-					$row = mysql_fetch_assoc($result);
+
+					$sql = "SELECT email FROM %smembers WHERE member_id=%d";
+					$row = queryDB($sql, array(TABLE_PREFIX, $system_courses[$course_id]['member_id']), TRUE);
+
 					$instructor_email = $row['email'];	
 			
 					$mail = new ATutorMailer;

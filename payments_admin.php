@@ -23,9 +23,13 @@ if(!isset($_config['ec_uri'])){
 // Delete a payment record after confirmation
 if (isset($_POST['submit_yes'])) {
 	$id = intval($_POST['id']);
-	$sql = "DELETE from ".TABLE_PREFIX."payments WHERE payment_id = '$id'";
-	$result= mysql_query($sql, $db);
-	$msg->addFeedback('ACTION_COMPLETED_SUCCESSFULLY');
+
+	$sql = "DELETE from %spayments WHERE payment_id = %d";
+	$result= queryDB($sql, array(TABLE_PREFIX, $id));
+	
+	if($result >0){
+	    $msg->addFeedback('ACTION_COMPLETED_SUCCESSFULLY');
+	}
 	header('Location: '.AT_BASE_HREF.'mods/payments/payments_admin.php');
 	exit;
 
@@ -37,8 +41,8 @@ if (isset($_POST['submit_yes'])) {
 
 if(isset($_GET['delete'])){
 	$hidden_vars['id'] = intval($_GET['delete']);
-	$msg->addConfirm('DELETE_PAYMENT', $hidden_vars);
 	require (AT_INCLUDE_PATH.'header.inc.php');
+	$msg->addConfirm('DELETE_PAYMENT', $hidden_vars);
 	$msg->printConfirm();
 	require (AT_INCLUDE_PATH.'footer.inc.php');
 	exit;
@@ -47,15 +51,17 @@ if(isset($_GET['delete'])){
 
 function is_enrolled($member_id, $course_id) {
 	global $db;
-	$sql = "SELECT approved FROM ".TABLE_PREFIX."course_enrollment WHERE course_id=$course_id AND member_id=$member_id AND approved<>'n'";
-	$result = mysql_query($sql, $db);
-	return (boolean) mysql_fetch_assoc($result);
+
+	$sql = "SELECT approved FROM %scourse_enrollment WHERE course_id=%d AND member_id=%d AND approved<>'n'";
+	$row = queryDB($sql, array(TABLE_PREFIX, $course_id, $member_id), TRUE);
+
+	return $row;
 }
 
-$sql	= "SELECT COUNT(*) AS cnt FROM ".TABLE_PREFIX."payments";
-$result = mysql_query($sql, $db);
+$sql	= "SELECT COUNT(*) AS cnt FROM %spayments";
+$row = queryDB($sql, array(TABLE_PREFIX), TRUE);
 
-if (($row = mysql_fetch_assoc($result)) && $row['cnt']) {
+if($row['cnt'] > 0){
 	$num_results = $row['cnt'];
 } else {
 	require(AT_INCLUDE_PATH.'header.inc.php');
@@ -78,14 +84,16 @@ $offset = ($page-1)*$results_per_page;
 // enroll/unenroll students
 
 if($_GET['func'] == 'enroll'){
+
 	$_GET['func']   = $addslashes($_GET['func']);
-	$sql = "REPLACE INTO ".TABLE_PREFIX."course_enrollment SET approved = 'y' WHERE course_id= '$_GET[course_id]' AND member_id = '$_GET[id0]'";
-	$result = mysql_query($sql,$db);
+	$sql = "REPLACE INTO %scourse_enrollment SET approved = 'y' WHERE course_id= %d AND member_id = %d";
+	$result = queryDB($sql,array(TABLE_PREFIX, $_GET['course_id'], $_GET['id0']));
+	
 }else if($_GET['func'] == 'unenroll'){
 
 	$_GET['func']   = $addslashes($_GET['func']);
-	$sql = "REPLACE INTO ".TABLE_PREFIX."course_enrollment SET approved = 'n' WHERE course_id= '$_GET[course_id]' AND member_id = '$_GET[id0]'";
-	$result = mysql_query($sql,$db);
+	$sql = "REPLACE INTO %scourse_enrollment SET approved = 'n' WHERE course_id= %d AND member_id = %d";
+	$result = queryDB($sql,array(TABLE_PREFIX, $_GET['course_id'], $_GET['id0']));
 }
 
 /// Get a list of those who have made payments
@@ -95,8 +103,8 @@ if ($_GET['reset_filter']) {
 
 $page_string = '';
 
-$sql = "SELECT P.*, M.login FROM ".TABLE_PREFIX."payments P INNER JOIN ".TABLE_PREFIX."members M USING (member_id)   ORDER BY  timestamp desc LIMIT $offset, $results_per_page";
-$result = mysql_query($sql,$db);
+$sql = "SELECT P.*, M.login FROM %spayments P INNER JOIN %smembers M USING (member_id)   ORDER BY  timestamp desc LIMIT %d, %d";
+$rows_payments = queryDB($sql, array(TABLE_PREFIX, TABLE_PREFIX, $offset, $results_per_page));
 
 require (AT_INCLUDE_PATH.'header.inc.php'); 
 	print_paginator($page, $num_results, $page_string, $results_per_page); 
@@ -115,7 +123,7 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 		<th scope="col"></th>
 	</tr>
 	</thead>
-	<?php while($row = mysql_fetch_assoc($result)): 
+	<?php   foreach($rows_payments as $row){
 				$payment_count++;
 			if(is_int($payment_count/2)){
 				$rowcolor = "even";	
@@ -135,7 +143,7 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 			if (is_enrolled($row['member_id'], $row['course_id'])): 
 					echo _AT('yes').' - <a href="mods/_core/enrolment/admin/enroll_edit.php?id0='.$row['member_id'].SEP.'func=unenroll'.SEP.'tab=0'.SEP.'course_id='.$row['course_id'].'">'._AT('unenroll').'</a>';
 			else:
-					echo _AT('no').' - <a href="mods/_core/enrolment/admin/enroll_edit.php?id0='.$row['member_id'].SEP.'func=enroll'.SEP.'tab=0'.SEP.'course_id='.$row['course_id'].'"'._AT('enroll').'</a>';
+					echo _AT('no').' - <a href="mods/_core/enrolment/admin/enroll_edit.php?id0='.$row['member_id'].SEP.'func=enroll'.SEP.'tab=0'.SEP.'course_id='.$row['course_id'].'">'._AT('enroll').'</a>';
 			endif; 
 			}
 		?>
@@ -144,7 +152,9 @@ require (AT_INCLUDE_PATH.'header.inc.php');
 		<td align="center"><?php echo $row['transaction_id']; ?></td>
 			<td align="center"><a href="<?php echo $_SERVER['PHP_SELF']; ?>?delete=<?php echo $row['payment_id']; ?>	"><?php echo _AT('delete'); ?></a></td>
 	</tr>
-	<?php endwhile; ?>
+	<?php 
+	} // end foreach $rows_payments
+	?>
 	</table>
 
 <?php require (AT_INCLUDE_PATH.'footer.inc.php'); ?>

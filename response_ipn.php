@@ -61,9 +61,11 @@ $_POST['item_number'] = $addslashes($_POST['item_number']);
 $_POST['txn_id']      = $addslashes($_POST['txn_id']);
 
 // check that txn_id has not been previously processed
-$sql = "SELECT transaction_id, amount FROM ".TABLE_PREFIX."payments WHERE payment_id='$_POST[item_number]'";
-$result2 = mysql_query($sql, $db);
-if (!($row = mysql_fetch_assoc($result2))) {
+$sql = "SELECT transaction_id, amount FROM %spayments WHERE payment_id=%d";
+$row = queryDB($sql, array(TABLE_PREFIX, $_POST['item_number']), TRUE);
+
+//if (!($row = mysql_fetch_assoc($result2))) {
+if (count($row) == 0) {
 	// Error: no valid payment_id
 	$ppmsg .= " No PaymentID ";
 	$error = 4;
