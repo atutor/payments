@@ -32,6 +32,7 @@ $this->_pages['mods/payments/failure_monerisca.php']['title_var']    = 'ec_payme
 
 $this->_pages['mods/payments/index_instructor.php']['title_var'] = 'ec_payments';
 $this->_pages['mods/payments/index_instructor.php']['parent']    = 'tools/index.php';
+$this->_pages['mods/payments/index_instructor.php']['img']       = 'mods/payments/payments.png';
 $this->_pages['mods/payments/index_instructor.php']['children']  = array('mods/_core/enrolment/index.php');
 $this->_pages['tools/enrollment/index.php']['children']       = array('mods/payments/index_instructor.php');
 
