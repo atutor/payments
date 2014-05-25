@@ -122,6 +122,8 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_cc_cvd_info','(3 or 4 di
 INSERT INTO `language_text` VALUES ('en', '_module','ec_seats_requested','Course Seats Requested ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_course_seats_price','Seat Price  ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_course_seats','Number of Seats Requested  ',NOW(),'');
+INSERT INTO `language_text` VALUES ('en', '_msgs','AT_ERROR_EC_URL_EMPTY ','You must provide a URL to the credit card processing location. ',NOW(),'');
+INSERT INTO `language_text` VALUES ('en', '_msgs','AT_ERROR_EC_ID_EMPTY ','You must provide an account ID for your credit card processing service. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_msgs','AT_INFOS_EC_NO_PAID_COURSES','You have not enrolled in any courses that require fees to be paid. <a href="./users/browse.php">Browse</a> courses. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_msgs','AT_FEEDBACK_EC_ADD_SAVED','Payment settings were successfully saved. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_msgs','AT_INFOS_EC_NO_STUDENTS_ENROLLED','No students have requested enrollment. ',NOW(),'');
