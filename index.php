@@ -115,7 +115,6 @@ $rows_payments = queryDB($sql, array(TABLE_PREFIX, $_SESSION['member_id']));
 
 if(count($rows_payments) > 0){
 ?>
-    <h3><?php echo _AT('payments'); ?></h3>
 	<table class="data static" rules="rows" summary="">
 	<thead>
 		<tr>
@@ -174,6 +173,25 @@ if(count($rows_payments) > 0){
 		if($payment_count == 0){
 			$msg->printInfos('EC_NO_PAID_COURSES');
 		}
+} else {
+?>
+	<table class="data static" rules="rows" summary="">
+	<thead>
+		<tr>
+			<th scope="col"><?php echo _AT('course'); ?></th>
+			<th scope="col"><?php echo _AT('ec_fees'); ?></th>
+			<th scope="col"><?php echo _AT('ec_payment_made'); ?></th>
+			<th scope="col"><?php echo _AT('ec_enroll_approved'); ?></th>
+			<th scope="col"><?php echo _AT('date'); ?></th>
+			<th scope="col"><?php echo _AT('ec_action'); ?></th>
+		</tr>
+	</thead>
+	<tr>
+	<td> None found
+	</td>
+	</tr>
+	</table>
+<?php
 }
 
 
