@@ -187,7 +187,7 @@ if(count($rows_payments) > 0){
 		</tr>
 	</thead>
 	<tr>
-	<td> None found
+	<td><?php echo _AT('none_found');?>
 	</td>
 	</tr>
 	</table>
