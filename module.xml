@@ -12,7 +12,7 @@
     <license>BSD</license> 
 	<release> 
         <version>1.8</version> 
-        <date>2014-04-13</date> 
+        <date>2014-09-20</date> 
         <state>Stable</state> 
         <notes>This version adds support for ATutor 2.2+, now using queryDB() to access the database. See the readme file included with this module for details about setting up the merchant account with your ecommerce service provider. You can find a link to the readme next to the module's listing in the Module Manager.</notes> 
     </release> 
