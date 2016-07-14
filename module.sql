@@ -73,11 +73,9 @@ INSERT INTO `language_text` VALUES ('en', '_module','ec_course_fee','Fee to char
 INSERT INTO `language_text` VALUES ('en', '_module','ec_select_course','Select Course',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payments_courses','Course Payment Settings',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_auto_approve','Auto approve enrollment when fee has been paid ',NOW(),'');
-INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_made','Payment Received ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_enrollpay_confirmed_manual','Your payment has been received, and you have been enrolled in <strong>%s</strong>. You should receive confirmation by email, and access to the course, once approved by the instructor. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_enrollpay_confirmed_auto','Your payment has been received, and you have been enrolled in <strong>%s</strong>. You can now <a href="login.php?course=%s">login to the course</a>. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_mail_instruction','Course fees have been received for the course: %s. Login as the course instructor and review the payment through the Manage tab, then choose Payments. ',NOW(),'');
-INSERT INTO `language_text` VALUES ('en', '_module','ec_payment_mail_instruction','Course fees have been recieved for course %. Login to the Payments utility to review the payment, and to approved the enrollment if Auto Approve Enrollment has not been set. ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_allow_instructors','Allow instructors to manage payments ',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_cancel','Cancel',NOW(),'');
 INSERT INTO `language_text` VALUES ('en', '_module','ec_auto_email','Email instructor when a payment has been received',NOW(),'');
