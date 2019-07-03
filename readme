@@ -224,7 +224,7 @@ Installation & Setup
 
 4. Once enabled, go to the admin's Payments tab and enter the Test/Sandbox information listed above into the appropriate fields, along with the currency and currency symbol, and save those setting.
 
-5.Optionally, the admin can enter a mailing address to which cheques can be sent and an an invoice generated, if that is to be one of the payment methods. Leave this field empty to disabled cheques as a method of payment.
+5.Optionally, the admin can enter a mailing address to which cheques can be sent and an invoice generated, if that is to be one of the payment methods. Leave this field empty to disabled cheques as a method of payment.
 
 6. Optionally, the admin can allow instructors to manage their own payments by selecting the associated checkbox in the payment	 settings.
 
